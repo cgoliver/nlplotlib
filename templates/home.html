@@ -1,2 +1,16 @@
-Welcome to NLPlotlib!
-Hello Roman.
+<head>
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/style.css')}}">
+</head>
+
+<img src="{{url_for('static', filename='nlplotlib.svg')}}" id="svgMain"> 
+
+<div id="query">
+	<form>
+	  <input type="text" name="query" width=5em><br>
+	</form>
+	<form action="/submitted">
+	  <input type="file" name="pic" accept="image/*">
+	  <input type="submit">
+	</form>
+</div>
+
