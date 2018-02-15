@@ -1,16 +1,38 @@
 <head>
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/style.css')}}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 
 <img src="{{url_for('static', filename='nlplotlib.svg')}}" id="svgMain"> 
 
 <div id="query">
-	<form>
-	  <input type="text" name="query" width=5em><br>
-	</form>
 	<form action="/submitted">
-	  <input type="file" name="pic" accept="image/*">
+	  <input type="text" name="query" size="50"><br>
+	  <input type="file" name="data" accept=".csv">
 	  <input type="submit">
 	</form>
 </div>
+
+<input type="text" id="search_form_input"></input>
+
+<div id="place_for_plot"></div>
+
+<script>
+$("#search_form_input").keyup(function(){
+    var text = $(this).val();
+
+$.ajax({
+    url: "/query",
+    type: "get",
+    data: {jsdata: text},
+    success: function(response){
+        $("#place_for_plot").html(response);
+        },
+    error: function(xhr){
+    
+        }
+    });
+});
+
+</script>
 

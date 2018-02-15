@@ -15,5 +15,12 @@ logger.setLevel(logging.INFO)
 @app.route("/")
 def home():
     return render_template("home.html")
+@app.route("/query")
+def get_query():
+    """
+    Get query from user and process it.
+    Render HTML that will contain the plot.
+    """
+    return render_template("plot.html")
 if __name__ == "__main__":
     app.run()
