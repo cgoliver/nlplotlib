@@ -9,19 +9,19 @@
 	<form action="/submitted">
 	  <input type="text" name="query" size="50"><br>
 	  <input type="file" name="data" accept=".csv">
-	  <input type="submit">
+	  <input type="submit" id="query_submit">
 	</form>
 </div>
 
-<input type="text" id="search_form_input"></input>
+<input type="text" name="query" id="search_form_input"></input>
 
 <div id="place_for_plot"></div>
 
 <script>
-$("#search_form_input").keyup(function(){
+$("#query_submit").click(function(){
     var text = $(this).val();
 
-$.ajax({
+.ajax({
     url: "/query",
     type: "get",
     data: {jsdata: text},
