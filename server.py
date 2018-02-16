@@ -4,7 +4,7 @@ import logging
 from flask import Flask
 from flask import render_template
 from flask import request
-from werkzeug.utils import import secure_filename
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -38,6 +38,12 @@ def allowed_file(filename):
 #check this out: http://pythonhosted.org/Flask-Uploads/
 @app.route("/submitted", methods=['GET', 'POST'])
 def process_request():
+    if request.method == 'POST':
+        result = request.form
+        query = result['query']
+        return render_template("plot.html", result=result)
+'''
+def process_request():
     """
     Process user query and data file.
     """
@@ -48,18 +54,20 @@ def process_request():
             flash('No file part')
             return redirect(request.url)
     file = request.files['file']
-    if file.filenmae == '':
+    if file.filename == '':
         flash('No selected file')
         return redirect(request.url)
 
     if file and allowed_file(file.filename):
         filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file', filename=filename))
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        return redirect(url_for('uploaded_file', filename=filename))
 
     #process query
     query = request['query']
+    print(query)
     #return plot HTML
-    return '''hello '''
+    return """hello"""
+'''
 if __name__ == "__main__":
     app.run()

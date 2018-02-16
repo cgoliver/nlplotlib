@@ -6,33 +6,33 @@
 <img src="{{url_for('static', filename='nlplotlib.svg')}}" id="svgMain"> 
 
 <div id="query">
-	<form action="/submitted">
+	<form action="/submitted" method="post">
 	  <input type="text" name="query" size="50"><br>
 	  <input type="file" name="data" accept=".csv">
 	  <input type="submit" id="query_submit">
 	</form>
 </div>
 
-<input type="text" name="query" id="search_form_input"></input>
+<!--<input type="text" name="query" id="search_form_input"></input>-->
 
-<div id="place_for_plot"></div>
+<!--<div id="place_for_plot"></div>-->
 
-<script>
-$("#query_submit").click(function(){
-    var text = $(this).val();
+<!--<script>-->
+<!--$("#query_submit").click(function(){-->
+    <!--var text = $(this).val();-->
 
-.ajax({
-    url: "/query",
-    type: "get",
-    data: {jsdata: text},
-    success: function(response){
-        $("#place_for_plot").html(response);
-        },
-    error: function(xhr){
+<!--$.ajax({-->
+    <!--url: "/query",-->
+    <!--type: "get",-->
+    <!--data: {jsdata: text},-->
+    <!--success: function(response){-->
+        <!--$("#place_for_plot").html(response);-->
+        <!--},-->
+    <!--error: function(xhr){-->
     
-        }
-    });
-});
+        <!--}-->
+    <!--});-->
+<!--});-->
 
-</script>
+<!--</script>-->
 
