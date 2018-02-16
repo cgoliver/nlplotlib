@@ -14,7 +14,7 @@ hdlr = logging.FileHandler('nlplotlib.log')
 logger.addHandler(hdlr)
 logger.setLevel(logging.INFO)
 
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
+# app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 UPLOAD_FOLDER = '/uploads'
 ALLOWED_EXTENSIONS = set(['txt', 'csv'])
 
@@ -41,6 +41,9 @@ def process_request():
     if request.method == 'POST':
         result = request.form
         query = result['query']
+
+        f = request.files['file']
+        f.save(secure_filename(f.filename))
         return render_template("plot.html", result=result)
 '''
 def process_request():
@@ -69,5 +72,6 @@ def process_request():
     #return plot HTML
     return """hello"""
 '''
+
 if __name__ == "__main__":
     app.run()

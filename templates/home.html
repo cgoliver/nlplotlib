@@ -6,9 +6,9 @@
 <img src="{{url_for('static', filename='nlplotlib.svg')}}" id="svgMain"> 
 
 <div id="query">
-	<form action="/submitted" method="post">
+	<form action="/submitted" method="post" enctype = "multipart/form-data">
 	  <input type="text" name="query" size="50"><br>
-	  <input type="file" name="data" accept=".csv">
+	  <input type="file" name="file" accept=".csv">
 	  <input type="submit" id="query_submit">
 	</form>
 </div>
