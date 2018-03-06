@@ -12,9 +12,30 @@ hdlr = logging.FileHandler('nlplotlib.log')
 logger.addHandler(hdlr)
 logger.setLevel(logging.INFO)
 
+def parse_query(query):
+    """
+    Parse query into vector.
+    """
+    pass
+
+def predict(query, data):
+    """
+    i.   Pass query to parser.
+    ii.  Pass parsed query to EA.
+    iii. Create graph with EA prediction.
+    """
+    pass
+
+def model_update(score):
+    """
+    Update EA with `score` from user.
+    """
+    pass
+
 @app.route("/")
 def home():
     return render_template("home.html")
+
 @app.route("/query")
 def get_query():
     """
