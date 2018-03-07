@@ -1,6 +1,7 @@
 """
 Simple Neural Network EA with training by numeric reward.
 """
+import pickle
 import numpy as np
 
 def nn_create(in_dim, out_dim, hidden_dim):
@@ -12,7 +13,7 @@ def nn_create(in_dim, out_dim, hidden_dim):
     W2 = np.random.randn(hidden_dim, out_dim) / np.sqrt(hidden_dim)
     b2 = np.zeros((1, out_dim))
 
-    return {'W1': W1, 'b1': b1, 'W2': W2, 'b2':b2}
+    return {'W1': W1, 'b1': b1, 'W2': W2, 'b2':b2, 'tested': 0, 'score': 0}
 
 def predict(nn,x, activation=np.tanh):
     """
@@ -54,13 +55,49 @@ def replicate(nn):
         nn[param] = mutate(param)
     return nn
 
-def select(pop, xs):
+def select(pop):
     """
     Select from `pop` and return next population.
     """
-    scores = [score(predict(nn, x) for nn,x in zip(pop, xs)]
+    scores = [nn['score'] for nn in pop]
     fitnesses = scores / np.sum(scores)
-    pass
+    children = np.random.choice(pop, size=len(pop), replace=True, p=fitnesses)
+    return [replicate(c) for c in children]
+
+def dump_state(pops):
+    pickle.dump(pops, open("static/EA.pickle", "wb"))
+
+def load_state():
+    return pickle.load(open("static/EA.pickle", "rb"))
+
+def query_predict(x, pops):
+    """
+    Pick an nn that has not been tested and produce a prediction.
+    If all have been tested, create next generation and produce prediction.
+    """
+    pops = load_state()
+    current_pop = pops[-1]
+    #if we find an untested NN in current gen, get prediction
+    for i, nn in enumerate(current_pop):
+        if nn['tested'] == 0:
+            return predict(nn, x)
+    #else, get new gen and get prediction
+    next_gen = select(current_pop) 
+    pops.append(next_gen)
+    test_nn, index = random.choice(enumerate(next_gen))
+    dump_state(pops)
+    return (predict(test_nn, x), index)
+
+def update_EA(score, index):
+    """
+    Store the score of an nn at the current generation and dump to pickle.
+    """
+    pops = load_state()
+    current_pop = pops[-1]
+    current_pop[index]['score'] = score
+    dump_state(pops)
+    return 0
+
 if __name__ == "__main__":
     in_dim = 2
     out_dim = 1

@@ -18,7 +18,7 @@ def parse_query(query):
     """
     pass
 
-def predict(query, data):
+def graph_gen(query, data):
     """
     i.   Pass query to parser.
     ii.  Pass parsed query to EA.
