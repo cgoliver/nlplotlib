@@ -2,5 +2,5 @@
 
 {% block result %}
 Thanks for submitting query: {{result.query}}.
-<img src="{{ url_for('static', filename='plots/{}'.format(plotpath))}}">
+<img src="{{ url_for('static', filename='plots/{}'.format(plotname))}}">
 {% endblock %}
