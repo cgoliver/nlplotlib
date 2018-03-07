@@ -6,19 +6,22 @@
 <img src="{{url_for('static', filename='nlplotlib.svg')}}" id="svgMain"> 
 
 <div id="query">
-	<form action="/submitted" method="post" enctype = "multipart/form-data">
+	<form action="/submitted" method="POST">
 	  <input type="text" name="query" size="50"><br>
 	  <input type="file" name="file" accept=".csv">
 	  <input type="submit" id="query_submit">
 	</form>
 </div>
 
-<!--<input type="text" name="query" id="search_form_input"></input>-->
+{% block result %}
+{% endblock %}
+
+<!--<input type="text" id="search_form_input"></input>-->
 
 <!--<div id="place_for_plot"></div>-->
 
 <!--<script>-->
-<!--$("#query_submit").click(function(){-->
+<!--$("#search_form_input").keyup(function(){-->
     <!--var text = $(this).val();-->
 
 <!--$.ajax({-->
