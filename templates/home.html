@@ -13,28 +13,29 @@
 	</form>
 </div>
 
-<h1> BYE FROM LOCAL </h1>
+{% block result %}
+{% endblock %}
 
-<input type="text" id="search_form_input"></input>
+<!--<input type="text" id="search_form_input"></input>-->
 
-<div id="place_for_plot"></div>
+<!--<div id="place_for_plot"></div>-->
 
-<script>
-$("#search_form_input").keyup(function(){
-    var text = $(this).val();
+<!--<script>-->
+<!--$("#search_form_input").keyup(function(){-->
+    <!--var text = $(this).val();-->
 
-$.ajax({
-    url: "/query",
-    type: "get",
-    data: {jsdata: text},
-    success: function(response){
-        $("#place_for_plot").html(response);
-        },
-    error: function(xhr){
+<!--$.ajax({-->
+    <!--url: "/query",-->
+    <!--type: "get",-->
+    <!--data: {jsdata: text},-->
+    <!--success: function(response){-->
+        <!--$("#place_for_plot").html(response);-->
+        <!--},-->
+    <!--error: function(xhr){-->
     
-        }
-    });
-});
+        <!--}-->
+    <!--});-->
+<!--});-->
 
-</script>
+<!--</script>-->
 
