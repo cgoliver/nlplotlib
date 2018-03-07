@@ -2,6 +2,7 @@
 Plotting wrappers.
 """
 import uuid
+import os
 import numpy as np
 import matplotlib as mpl
 mpl.use('Agg')
@@ -24,9 +25,10 @@ def xx_make_scatter_plot(data=None):
         ys = np.random.randn(10)
         fig, ax = plt.subplots()
         plt.scatter(xs, ys)
-        path =  "static/{}.png".format(uuid.uuid1())
+        name =  str(uuid.uuid1()) + '.png'
+        path = os.path.join("static", "plots",name)
         fig.savefig(path, format="png")
-        return path
+        return name  
     return 0
 
 if __name__ == "__main__":

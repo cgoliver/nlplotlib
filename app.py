@@ -6,6 +6,8 @@ from flask import render_template
 from flask import request
 from werkzeug.utils import secure_filename
 
+from plotter import make_plot
+
 app = Flask(__name__)
 
 #logging stuff
@@ -25,6 +27,8 @@ def graph_gen(query, data):
     i.   Pass query to parser.
     ii.  Pass parsed query to EA.
     iii. Create graph with EA prediction.
+
+    Returns path to figure.
     """
     pass
 
@@ -36,15 +40,16 @@ def model_update(score):
 
 @app.route("/")
 def home():
-    x = 4
     return render_template("home.html")
 
 @app.route("/submitted", methods=['POST', 'GET'])
 def submitted():
     if request.method == 'POST':
         result = request.form
+        # q = parse_query(result['query'])
+        plotname = make_plot(1, 1)
         
-        return render_template("submitted.html", result=result)
+        return render_template("submitted.html", plotname=plotname, result=result)
 
 if __name__ == "__main__":
     app.run()
