@@ -1,13 +1,16 @@
 """
 Plotting wrappers.
 """
+import uuid
 import matplotlib.pyplot as plt
+
 
 def xx_make_line_plot(data=None):
     if not data:
         xs = np.random.randn(10)
-        plt.plot(xs)
-        plt.savefig("static/plot.png", format="png")
+        fig, ax = plt.subplot()
+        ax.plot(xs)
+        fig.savefig("static/plot.png", format="png")
         
 def xx_make_scatter_plot(data=None):
     if not data:
