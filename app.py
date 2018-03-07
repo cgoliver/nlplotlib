@@ -35,7 +35,6 @@ def model_update(score):
 @app.route("/")
 def home():
     x = 4
-    print(f"{x}")
     return render_template("home.html")
 
 @app.route("/submitted", methods=['POST', 'GET'])
