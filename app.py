@@ -42,7 +42,7 @@ def home():
 def submitted():
     if request.method == 'POST':
         result = request.form
-        q = f"{result[query]}"
+        q = f"{result['query']}"
         
         return render_template("submitted.html", result=q)
 
