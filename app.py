@@ -38,7 +38,10 @@ def home():
 
 @app.route("/submitted", methods=['POST', 'GET'])
 def submitted():
-    return render_template("submitted.html")
+    if request.method == 'POST':
+        result = request.form
+        
+        return render_template("submitted.html", result=result)
 
 @app.route("/query")
 def get_query():
