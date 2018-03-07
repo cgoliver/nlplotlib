@@ -8,19 +8,26 @@ mpl.use('Agg')
 import matplotlib.pyplot as plt
 
 
-def xx_make_line_plot(data=None):
+def xx_make_line_plot(*args, data=None):
     if not data:
         xs = np.random.randn(10)
         fig, ax = plt.subplots()
         ax.plot(xs)
-        fig.savefig("static/{}.png".format(uuid.uuid1()), format="png")
+        path =  "static/{}.png".format(uuid.uuid1())
+        fig.savefig(path, format="png")
         
+        return path
+    return 0
 def xx_make_scatter_plot(data=None):
     if not data:
         xs = np.random.randn(10)
         ys = np.random.randn(10)
-        plt.scatter(ys)
-        fig.savefig("static/{}.png".format(uuid.uuid1()), format="png")
+        fig, ax = plt.subplots()
+        plt.scatter(xs, ys)
+        path =  "static/{}.png".format(uuid.uuid1())
+        fig.savefig(path, format="png")
+        return path
+    return 0
 
 if __name__ == "__main__":
     xx_make_line_plot()
