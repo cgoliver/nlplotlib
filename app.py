@@ -34,11 +34,11 @@ def model_update(score):
 
 @app.route("/")
 def home():
-    return render_template("submitted.html")
+    return render_template("home.html")
 
 @app.route("/submitted", methods=['POST', 'GET'])
 def submitted():
-    return render_template("home.html")
+    return render_template("submitted.html")
 
 @app.route("/query")
 def get_query():
