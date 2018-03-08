@@ -1,6 +1,8 @@
 <head>
+{% block head %}
 <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/style.css')}}">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+{% endblock %}
 </head>
 
 <img src="{{url_for('static', filename='nlplotlib.svg')}}" id="svgMain"> 
@@ -17,6 +19,9 @@
 {% block result %}
 {% endblock %}
 </div>
+
+{% block feedback %}
+{% endblock %}
 
 <!--<input type="text" id="search_form_input"></input>-->
 
