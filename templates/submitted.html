@@ -4,6 +4,11 @@
 {{ super()  }}
 <!-- Font Awesome Icon Library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script>
+$("#submit").click(function() {
+    $("#submit").attr("disabled", "true");
+        });
+</script>
 <style>
 fieldset, label { margin: 0; padding: 0;  }
 body{ margin: 20px;  }
@@ -77,6 +82,7 @@ h1 { font-size: 1.5em; margin: 10px;  }
 
 <div id="text-center"> How did we do? </br>
 
+<form action="/feedback" method="POST">
 <fieldset class="rating">
     <input type="radio" id="star5" name="rating" value="5" /><label class = "full" for="star5" title="Awesome - 5 stars"></label>
     <input type="radio" id="star4half" name="rating" value="4 and a half" /><label class="half" for="star4half" title="Pretty good - 4.5 stars"></label>
@@ -87,8 +93,12 @@ h1 { font-size: 1.5em; margin: 10px;  }
     <input type="radio" id="star2" name="rating" value="2" /><label class = "full" for="star2" title="Kinda bad - 2 stars"></label>
     <input type="radio" id="star1half" name="rating" value="1 and a half" /><label class="half" for="star1half" title="Meh - 1.5 stars"></label>
     <input type="radio" id="star1" name="rating" value="1" /><label class = "full" for="star1" title="Sucks big time - 1 star"></label>
-    <input type="radio" id="starhalf" name="rating" value="half" /><label class="half" for="starhalf" title="Sucks big time - 0.5 stars"></label>
+    <input type="radio" id="starhalf" name="rating" value="half" /><label
+    class="half" for="starhalf" title="Sucks big time - 0.5
+    stars"></label><br>
 </fieldset>
+    <input type="submit" value="Submit" id="disable">
+</form>
 
 <br>
 
