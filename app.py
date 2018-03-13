@@ -56,5 +56,11 @@ def submitted():
         
         return render_template("submitted.html", plotname=plotname, result=result)
 
+@app.route("/feedback", methods=['POST', 'GET'])
+def feedback():
+    if request.method == 'POST':
+        result = request.form['rating']
+        logger.info(result)
+    return "Feedback recorded!"
 if __name__ == "__main__":
     app.run()
