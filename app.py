@@ -46,7 +46,16 @@ def home():
 def submitted():
     if request.method == 'POST':
         result = request.form
+
+        query = result['query']
         # q = parse_query(result['query'])
+
+        #if no filepath, use iris.csv
+        if not result['file']:
+            datapath = 'static/iris.csv'
+        else:
+            datapath = result['file']
+
         plotname = make_plot(1, 1)
         
         return render_template("submitted.html", plotname=plotname, result=result)
