@@ -47,6 +47,11 @@ def submitted():
     if request.method == 'POST':
         result = request.form
         # q = parse_query(result['query'])
+        datapath = result['file']
+        if not datapath:
+            print("NO FILE")
+        else:
+            print(datapath)
         plotname = make_plot(1, 1)
         
         return render_template("submitted.html", plotname=plotname, result=result)

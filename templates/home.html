@@ -8,34 +8,10 @@
 <div id="query">
 	<form action="/submitted" method="POST">
 	  <input type="text" name="query" size="50"><br>
-	  <input type="file" name="file" accept=".csv">
+	  <input type="file" id="fileSelect" name="file" accept=".csv">
 	  <input type="submit" id="query_submit">
 	</form>
 </div>
 
 {% block result %}
 {% endblock %}
-
-<!--<input type="text" id="search_form_input"></input>-->
-
-<!--<div id="place_for_plot"></div>-->
-
-<!--<script>-->
-<!--$("#search_form_input").keyup(function(){-->
-    <!--var text = $(this).val();-->
-
-<!--$.ajax({-->
-    <!--url: "/query",-->
-    <!--type: "get",-->
-    <!--data: {jsdata: text},-->
-    <!--success: function(response){-->
-        <!--$("#place_for_plot").html(response);-->
-        <!--},-->
-    <!--error: function(xhr){-->
-    
-        <!--}-->
-    <!--});-->
-<!--});-->
-
-<!--</script>-->
-
