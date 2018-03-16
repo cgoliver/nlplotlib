@@ -50,15 +50,17 @@ def submitted():
         query = result['query']
         # q = parse_query(result['query'])
 
-        #if no filepath, use iris.csv
+        #if no filepath, use iris.csv. 
+        #also need to check extension in case plot uploaded
         if not result['file']:
             datapath = 'static/iris.csv'
         else:
             datapath = result['file']
 
-        plotname = make_plot(1, 1)
+        plotname, time = make_plot(1, 1)
         
-        return render_template("submitted.html", plotname=plotname, result=result)
+        return render_template("submitted.html", plotname=plotname,\
+            result=result, time=time)
 
 @app.route("/feedback", methods=['POST', 'GET'])
 def feedback():
