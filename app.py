@@ -7,6 +7,7 @@ from flask import request
 from werkzeug.utils import secure_filename
 
 from plotter import make_plot
+from nn import ea
 
 app = Flask(__name__)
 
@@ -15,6 +16,8 @@ logger = logging.getLogger('myapp')
 hdlr = logging.FileHandler('nlplotlib.log')
 logger.addHandler(hdlr)
 logger.setLevel(logging.INFO)
+
+nns = ea()
 
 def parse_query(query):
     """
@@ -56,8 +59,14 @@ def submitted():
         else:
             datapath = result['file']
 
+        #call NN
+        next(ea)
+        #send query to ea, get prediction
+        prediction = ea.send([1, 2])
+
+        #use prediction to make plot
         plotname, time = make_plot(1, 1)
-        
+
         return render_template("submitted.html", plotname=plotname,\
             result=result, time=time)
 
@@ -66,6 +75,9 @@ def feedback():
     if request.method == 'POST':
         result = request.form['rating']
         logger.info(result)
+        #send feedback to NN
+        next(ea)
+        ea.send(float(result))
     return "Feedback recorded!"
 if __name__ == "__main__":
     app.run()

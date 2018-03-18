@@ -114,16 +114,29 @@ def ea():
         # get input vector
         x = yield
         pred = predict(pop[nn_ind], x)
+        #for now yield 1
+        yield 1
+        # yield pred
         score = yield
-        update_EA(score, nn_ind)
-        yield pred
+        pop[nn_ind]['score'] = score
+        # update_EA(score, nn_ind)
         nn_ind += 1
 
+def test_ea():
+    g = ea()
+    next(g)
+    query = np.array([2, 2])
+    pred = g.send(query)
+    next(g)
+    score = 1.2
+    g.send(score)
+    
 if __name__ == "__main__":
     in_dim = 2
     out_dim = 1
     hidden_dim = 5
     x = [1, 2]
     pop = [nn_create(in_dim, out_dim, hidden_dim) for _ in range(100)]
-    print(predict(nn_create(2, 2, 3), x))
+    # print(predict(nn_create(2, 2, 3), x))
+    test_ea()
     pass
