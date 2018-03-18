@@ -98,10 +98,32 @@ def update_EA(score, index):
     dump_state(pops)
     return 0
 
+def ea():
+    """
+    Main loop of EA, used to interface with user feedback and update model.
+    """
+    in_dim = 2
+    out_dim = 1
+    hidden_dim = 5
+    nn_ind = 0
+    pop = [nn_create(in_dim, out_dim, hidden_dim) for _ in range(100)]
+    while True:
+        if nn_ind == len(pop):
+            nn_ind = 0
+            pop = select(pop)
+        # get input vector
+        x = yield
+        pred = predict(pop[nn_ind], x)
+        score = yield
+        update_EA(score, nn_ind)
+        yield pred
+        nn_ind += 1
+
 if __name__ == "__main__":
     in_dim = 2
     out_dim = 1
     hidden_dim = 5
+    x = [1, 2]
     pop = [nn_create(in_dim, out_dim, hidden_dim) for _ in range(100)]
     print(predict(nn_create(2, 2, 3), x))
     pass
