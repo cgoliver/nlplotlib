@@ -14,8 +14,12 @@ def embed(modelpath='Data/glove.6B.50d.txt.word2vec'):
     # calculate: (king - man) + woman = ?
     result = model.most_similar(positive=['woman', 'king'], negative=['man'],\
         topn=1)
-    print(model['roman'])
+    try:
+        print(model['roman'])
+    except KeyError:
+        print("word not in vocabulary")
     # print(result)
+
 
 if __name__ == "__main__":
     embed()
