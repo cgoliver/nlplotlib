@@ -9,17 +9,22 @@ def convert():
     word2vec_output_file = 'Data/glove.6B.50d.txt.word2vec'
     glove2word2vec(glove_input_file, word2vec_output_file)
 
-def embed(modelpath='Data/glove.6B.50d.txt.word2vec'):
-    model = KeyedVectors.load_word2vec_format(modelpath, binary=False)
+def model_load(modelpath='Data/glove.6B.50d.txt.word2vec'):
+    return KeyedVectors.load_word2vec_format(modelpath, binary=False)
+    
+def embed(word, model):
     # calculate: (king - man) + woman = ?
     result = model.most_similar(positive=['woman', 'king'], negative=['man'],\
         topn=1)
     try:
-        print(model['roman'])
+        print(model[word])
     except KeyError:
         print("word not in vocabulary")
     # print(result)
 
 
 if __name__ == "__main__":
-    embed()
+    words = ['carlos', 'roman', 'plot', 'axis']
+    model = model_load()
+    for w in words:
+        embed(w, model)
