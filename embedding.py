@@ -22,9 +22,16 @@ def embed(word, model):
         print("word not in vocabulary")
     # print(result)
 
-
+def sentence_embed(model, sentence):
+    """
+    Embed sentence as mean of word embeddings.
+    """
+    vec = []
+    for w in words:
+        vec.append(embed(w, model))
+    meaned = np.mean(vec, axis=0)
+    return meaned
+    
 if __name__ == "__main__":
     words = ['carlos', 'roman', 'plot', 'axis']
     model = model_load()
-    for w in words:
-        embed(w, model)
