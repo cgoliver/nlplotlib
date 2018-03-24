@@ -52,7 +52,8 @@ def replicate(nn):
     Return the child of `nn` with weights shifted by Gaussian noise.
     """
     for param in nn:
-        nn[param] = mutate(param)
+        if param not in ["tested", "score"]:
+            nn[param] = mutate(param)
     return nn
 
 def select(pop):
