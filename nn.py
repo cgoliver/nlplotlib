@@ -4,6 +4,34 @@ Simple Neural Network EA with training by numeric reward.
 import pickle
 import numpy as np
 
+def mlp_build(shape):
+    """
+    Multi-layer perceptron.
+    shape: (input_size, [hidden_sizes], output_size)
+    """
+    nn = []
+    for i in range(len(shape)-1):
+        W = np.random.randn(shape[i], shape[i+1]) / np.sqrt(shape[i])
+        b = np.zeros((1, shape[i+1]))
+        nn.append((W,b))
+        
+    return nn
+    
+def mlp_predict(nn, x, activation=np.tanh):
+    """
+    Generate prediction on given neural net.
+    """
+    z = None
+    cur_input = x
+    for layer in nn:
+        W, b = layer
+        z = cur_input.dot(W) + b
+        cur_input = activation(z)
+        
+    exp_scores = np.exp(cur_input)
+    probs = np.exp(exp_scores) / np.sum(exp_scores, axis=1, keepdims=True)
+    return np.argmax(probs)
+
 def nn_create(in_dim, out_dim, hidden_dim):
     """
     Create single layer neural network.
@@ -24,7 +52,7 @@ def predict(nn,x, activation=np.tanh):
     a1 = activation(z1)
     z2 = a1.dot(W2) + b2
     a2 = activation(z2)
-    exp_scores = np.exp(z2)
+    exp_scores = np.exp(a2)
     probs = exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
     return np.argmax(probs, axis=1)
 
@@ -133,11 +161,14 @@ def test_ea():
     g.send(score)
     
 if __name__ == "__main__":
-    in_dim = 2
-    out_dim = 1
-    hidden_dim = 5
-    x = [1, 2]
-    pop = [nn_create(in_dim, out_dim, hidden_dim) for _ in range(100)]
+    # in_dim = 2
+    # out_dim = 1
+    # hidden_dim = 5
+    # x = [1, 2]
+    # pop = [nn_create(in_dim, out_dim, hidden_dim) for _ in range(100)]
     # print(predict(nn_create(2, 2, 3), x))
-    test_ea()
+    # test_ea()
+    mlp = mlp_build((5, 6, 6, 3))
+    print(mlp)
+    print(mlp_predict(mlp, np.array([1, 0, 0, 1, 1])))
     pass
