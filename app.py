@@ -60,9 +60,9 @@ def submitted():
             datapath = result['file']
 
         #call NN
-        next(ea)
+        next(nns)
         #send query to ea, get prediction
-        prediction = ea.send([1, 2])
+        prediction = nns.send([1, 2])
 
         #use prediction to make plot
         plotname, time = make_plot(1, 1)
@@ -76,8 +76,8 @@ def feedback():
         result = request.form['rating']
         logger.info(result)
         #send feedback to NN
-        next(ea)
-        ea.send(float(result))
+        next(nns)
+        nns.send(float(result))
     return "Feedback recorded!"
 if __name__ == "__main__":
     app.run()
