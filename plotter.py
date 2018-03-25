@@ -6,7 +6,6 @@ import wrappers
 import time
 
 def make_plot(selection, args):
-    time.sleep(10)
     fns = [getattr(wrappers, f) for f in dir(wrappers) if f.startswith('xx_')]
     #call the function selected by NN
     figpath = fns[selection]()

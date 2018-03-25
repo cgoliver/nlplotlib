@@ -5,6 +5,7 @@ from flask import Flask
 from flask import render_template
 from flask import request
 from werkzeug.utils import secure_filename
+import numpy as np
 
 from plotter import make_plot
 from nn import ea
@@ -62,7 +63,7 @@ def submitted():
         #call NN
         next(nns)
         #send query to ea, get prediction
-        prediction = nns.send([1, 2])
+        prediction = nns.send(np.array([1, 2]))
 
         #use prediction to make plot
         plotname, time = make_plot(1, 1)
