@@ -1,3 +1,4 @@
+import numpy as np
 from gensim.scripts.glove2word2vec import glove2word2vec
 from gensim.models import KeyedVectors
 
@@ -16,10 +17,7 @@ def embed(word, model):
     # calculate: (king - man) + woman = ?
     result = model.most_similar(positive=['woman', 'king'], negative=['man'],\
         topn=1)
-    try:
-        print(model[word])
-    except KeyError:
-        print("word not in vocabulary")
+    return model[word]
     # print(result)
 
 def sentence_embed(model, sentence):
@@ -27,11 +25,20 @@ def sentence_embed(model, sentence):
     Embed sentence as mean of word embeddings.
     """
     vec = []
-    for w in words:
-        vec.append(embed(w, model))
-    meaned = np.mean(vec, axis=0)
-    return meaned
+    for w in sentence:
+        try:
+            embedding = embed(w, model)
+        except KeyError:
+            continue
+        else:
+            vec.append(embedding)
+    #if no embeddings found
+    if len(vec) == 0:
+        return np.zeros((50))
+    else:
+        return np.mean(vec, axis=0)
     
 if __name__ == "__main__":
     words = ['carlos', 'roman', 'plot', 'axis']
     model = model_load()
+    print(sentence_embed(model, words))

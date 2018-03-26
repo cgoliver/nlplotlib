@@ -5,14 +5,28 @@
 {% endblock %}
 </head>
 
+ {% with messages = get_flashed_messages() %}
+         {% if messages %}
+            <ul>
+               {% for message in messages %}
+               <li<{{ message }}</li>
+               {% endfor %}
+            </ul>
+         {% endif %}
+ {% endwith %}
+
 <img src="{{url_for('static', filename='nlplotlib.svg')}}" id="svgMain"> 
 
 <div id="query">
 	<form action="/submitted" method="POST">
 	  <input type="text" name="query" size="50"><br>
 	  <input type="file" id="fileSelect" name="file" accept=".csv">
-	  <input type="submit" id="query_submit">
+	  <input type="submit" id="query_submit" onClick="showDiv()">
 	</form>
+</div>
+
+<div id="loading" style="display:none;">
+<img src="{{url_for('static', filename='loading.gif')}}">
 </div>
 
 
@@ -20,6 +34,12 @@
 {% block result %}
 {% endblock %}
 </div>
+
+<script>
+function showDiv() {
+   document.getElementById('loading').style.display = "block";
+}
+</script>
 
 {% block feedback %}
 {% endblock %}

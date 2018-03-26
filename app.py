@@ -5,14 +5,23 @@ import logging
 from flask import Flask
 from flask import render_template
 from flask import request
+from flask import flash
+from flask import redirect
+from flask import url_for
 from werkzeug.utils import secure_filename
 import numpy as np
 
 from plotter import make_plot
 from nn import ea
 from romanlp import get_action_from_sentence
+from embedding import *
 
 app = Flask(__name__)
+app.secret_key = 'some_secret'
+
+#load word2vec model
+
+w2v = model_load()
 
 #logging stuff
 logger = logging.getLogger('myapp')
@@ -59,8 +68,18 @@ def submitted():
         # q = parse_query(result['query'])
         #if no filepath, use iris.csv. 
         #also need to check extension in case plot uploaded
-        parsed = get_action_from_sentence(query)
-        logger.info(parsed)
+        logger.info(query)
+        logger.info(f"query length { len(query) }")
+        if len(query) > 0:
+            parsed = get_action_from_sentence(query)
+            complements = parsed[1]
+            embed = sentence_embed(w2v, complements)
+            logging.info(complements)
+            logging.info(embed)
+        else:
+            flash("Please enter a query")
+            logger.info("EMPTY QUERY")
+            return redirect(url_for("home"))
 
         if not result['file']:
             datapath = 'static/iris.csv'

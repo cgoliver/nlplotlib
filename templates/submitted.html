@@ -75,6 +75,15 @@ h1 { font-size: 1.5em; margin: 10px;  }
 
 <img src="{{ url_for('static', filename='plots/{}'.format(plotname))}}">
 
+{% with messages = get_flashed_messages() %}
+         {% if messages %}
+            <ul>
+               {% for message in messages %}
+               <li<{{ message }}</li>
+               {% endfor %}
+            </ul>
+         {% endif %}
+ {% endwith %}
 
 Time: {{time}}
 
