@@ -1,4 +1,5 @@
 import os
+import sys
 import logging
 
 from flask import Flask
@@ -44,6 +45,8 @@ def model_update(score):
 
 @app.route("/")
 def home():
+    ver = sys.version_info[0]
+    logger.info("PYTHON: %s"%ver)
     return render_template("home.html")
 
 @app.route("/submitted", methods=['POST', 'GET'])
