@@ -10,6 +10,7 @@ import numpy as np
 
 from plotter import make_plot
 from nn import ea
+from romanlp import get_action_from_sentence
 
 app = Flask(__name__)
 
@@ -58,6 +59,9 @@ def submitted():
         # q = parse_query(result['query'])
         #if no filepath, use iris.csv. 
         #also need to check extension in case plot uploaded
+        parsed = get_action_from_sentence(query)
+        logger.info(parsed)
+
         if not result['file']:
             datapath = 'static/iris.csv'
         else:

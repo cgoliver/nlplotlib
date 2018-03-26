@@ -154,10 +154,10 @@ def get_action_from_sentence(text):
         if "many" in complement:
             complement.remove("many")
         complement, value = comp_to_val(complement,value)
-        print("INPUT: ", text)
-        print("Action : ", verb, complement)
-        print("Quantity : ", value)
-        print("-------------------------------------------")
+        # print("INPUT: ", text)
+        # print("Action : ", verb, complement)
+        # print("Quantity : ", value)
+        # print("-------------------------------------------")
     else:
 
         value=text.split("\"")[1]
@@ -181,10 +181,10 @@ def get_action_from_sentence(text):
         if "many" in complement:
             complement.remove("many")
         comp,value = comp_to_val(complement,value)
-        print("INPUT: ", text)
-        print("Action : ", verb, complement)
-        print("Quantity : ", value)
-        print("-------------------------------------------")
+        # print("INPUT: ", text)
+        # print("Action : ", verb, complement)
+        # print("Quantity : ", value)
+        # print("-------------------------------------------")
     return([verb,complement,value])
 if __name__ == "__main__":
 	t1 = "Make a scatter plot from this data file."
