@@ -46,7 +46,7 @@ def model_update(score):
 @app.route("/")
 def home():
     ver = sys.version_info[0]
-    logger.info("PYTHON: %s"%ver)
+    logger.info(f"PYTHON: {ver}")
     return render_template("home.html", version=ver)
 
 @app.route("/submitted", methods=['POST', 'GET'])
