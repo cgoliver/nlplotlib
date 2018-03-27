@@ -144,7 +144,7 @@ def ea(shape):
         x = yield
         pred = mlp_predict(pop[nn_ind], x)
         #for now yield 1
-        yield 1
+        yield pred 
         # yield pred
         score = yield
         pop[nn_ind]['score'] = score
@@ -154,13 +154,14 @@ def ea(shape):
 def test_ea(shape):
     g = ea(shape)
     next(g)
-    query = np.array(np.zeros((shape[0])))
-    pred = g.send(query)
-    print(pred)
-    next(g)
-    score = 1.2
-    g.send(score)
-    
+    for _ in range(10):
+        query = np.array(np.random.randn((shape[0])))
+        pred = g.send(query)
+        print(pred)
+        next(g)
+        score = 1.2
+        g.send(score)
+        
 if __name__ == "__main__":
     # in_dim = 2
     # out_dim = 1
