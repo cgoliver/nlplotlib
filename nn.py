@@ -9,11 +9,11 @@ def mlp_build(shape):
     Multi-layer perceptron.
     shape: (input_size, [hidden_sizes], output_size)
     """
-    nn = []
+    nn = {'score': 0, 'model': []}
     for i in range(len(shape)-1):
         W = np.random.randn(shape[i], shape[i+1]) / np.sqrt(shape[i])
         b = np.zeros((1, shape[i+1]))
-        nn.append((W,b))
+        nn['model'].append((W,b))
         
     return nn
     
@@ -23,7 +23,7 @@ def mlp_predict(nn, x, activation=np.tanh):
     """
     z = None
     cur_input = x
-    for layer in nn:
+    for layer in nn['model']:
         W, b = layer
         z = cur_input.dot(W) + b
         cur_input = activation(z)
@@ -127,7 +127,7 @@ def update_EA(score, index):
     dump_state(pops)
     return 0
 
-def ea():
+def ea(shape):
     """
     Main loop of EA, used to interface with user feedback and update model.
     """
@@ -135,14 +135,14 @@ def ea():
     out_dim = 1
     hidden_dim = 5
     nn_ind = 0
-    pop = [nn_create(in_dim, out_dim, hidden_dim) for _ in range(100)]
+    pop = [mlp_build(shape) for _ in range(100)]
     while True:
         if nn_ind == len(pop):
             nn_ind = 0
             pop = select(pop)
         # get input vector
         x = yield
-        pred = predict(pop[nn_ind], x)
+        pred = mlp_predict(pop[nn_ind], x)
         #for now yield 1
         yield 1
         # yield pred
@@ -151,11 +151,12 @@ def ea():
         # update_EA(score, nn_ind)
         nn_ind += 1
 
-def test_ea():
-    g = ea()
+def test_ea(shape):
+    g = ea(shape)
     next(g)
-    query = np.array([2, 2])
+    query = np.array(np.zeros((shape[0])))
     pred = g.send(query)
+    print(pred)
     next(g)
     score = 1.2
     g.send(score)
@@ -168,7 +169,8 @@ if __name__ == "__main__":
     # pop = [nn_create(in_dim, out_dim, hidden_dim) for _ in range(100)]
     # print(predict(nn_create(2, 2, 3), x))
     # test_ea()
-    mlp = mlp_build((5, 6, 6, 3))
-    print(mlp)
-    print(mlp_predict(mlp, np.array([1, 0, 0, 1, 1])))
+    # mlp = mlp_build((50, 20, 20, 10))
+    # print(mlp)
+    # print(mlp_predict(mlp, np.array(np.zeros((50)))))
+    test_ea((50, 20, 20, 10))
     pass

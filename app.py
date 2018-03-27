@@ -29,7 +29,8 @@ hdlr = logging.FileHandler('nlplotlib.log')
 logger.addHandler(hdlr)
 logger.setLevel(logging.INFO)
 
-nns = ea()
+#get nerual net generator
+nns = ea((50, 20, 20, 10))
 
 def parse_query(query):
     """
@@ -65,21 +66,15 @@ def submitted():
         result = request.form
 
         query = result['query']
-        # q = parse_query(result['query'])
         #if no filepath, use iris.csv. 
         #also need to check extension in case plot uploaded
         logger.info(query)
         logger.info(f"query length { len(query) }")
-        if len(query) > 0:
-            parsed = get_action_from_sentence(query)
-            complements = parsed[1]
-            embed = sentence_embed(w2v, complements)
-            logging.info(complements)
-            logging.info(embed)
-        else:
-            flash("Please enter a query")
-            logger.info("EMPTY QUERY")
-            return redirect(url_for("home"))
+        parsed = get_action_from_sentence(query)
+        complements = parsed[1]
+        embed = sentence_embed(w2v, complements)
+        logging.info(complements)
+        logging.info(embed)
 
         if not result['file']:
             datapath = 'static/iris.csv'
@@ -89,10 +84,10 @@ def submitted():
         #call NN
         next(nns)
         #send query to ea, get prediction
-        prediction = nns.send(np.array([1, 2]))
+        prediction = nns.send(embed)
 
         #use prediction to make plot
-        plotname, time = make_plot(1, 1)
+        plotname, time = make_plot(prediction, 1)
 
         return render_template("submitted.html", plotname=plotname,\
             result=result, time=time)

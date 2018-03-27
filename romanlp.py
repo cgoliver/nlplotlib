@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 import os
 import re
 import nltk
@@ -13,6 +16,7 @@ import sys
 import random
 from quantulum import parser as qp
 import matplotlib
+
 
 datadir = osp.join('/Users/carlosgonzalezoliver/Projects/NLPlotlib/roman_data')
 os.environ['STANFORD_PARSER'] = osp.join(datadir, 'stanford/stanford-parser.jar')
@@ -35,13 +39,13 @@ def get_type(text,word):
 
 def get_action_verb_from_string(text):
     blob = TextBlob(text)
-    print(blob)
+    # print(blob)
     noun_phrases = blob.noun_phrases
 
     verbs = list()
     for word, tag in blob.tags:
-        print(word)
-        print(tag)
+        # print(word)
+        # print(tag)
         if tag == 'VB':
             verbs.append(word.lemmatize())
     return verbs

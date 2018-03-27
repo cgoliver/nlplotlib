@@ -17,11 +17,16 @@
 
 <img src="{{url_for('static', filename='nlplotlib.svg')}}" id="svgMain"> 
 
+<button type="button" id="about-btn" onclick="toggleShow('about')">About</button>
+<div id="about" style=display:none>
+Bla bla this is how it works.
+</div>
+
 <div id="query">
-	<form action="/submitted" method="POST">
-	  <input type="text" name="query" size="50"><br>
+	<form action="/submitted" method="POST" onsubmit="showDiv('loading')">
+	  <input type="text" name="query" size="50" required><br>
 	  <input type="file" id="fileSelect" name="file" accept=".csv">
-	  <input type="submit" id="query_submit" onClick="showDiv()">
+	  <input type="submit" id="query_submit">
 	</form>
 </div>
 
@@ -35,10 +40,23 @@
 {% endblock %}
 </div>
 
+
 <script>
-function showDiv() {
-   document.getElementById('loading').style.display = "block";
+function showDiv(id) {
+   document.getElementById(id).style.display = "block";
 }
+
+function toggleShow(id) {
+    var x = document.getElementById(id);
+    if (x.style.display === "none") {
+            x.style.display = "block";
+                
+    } else {
+            x.style.display = "none";
+                
+    }
+}
+
 </script>
 
 {% block feedback %}
