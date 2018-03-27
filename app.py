@@ -96,7 +96,6 @@ def feedback():
         #send feedback to NN
         # next(nns)
         nns.send(float(result))
-
         log.send(result)
     return ('', 204)
     # return "Feedback recorded!"
