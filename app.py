@@ -15,6 +15,7 @@ from plotter import make_plot
 from nn import ea
 from romanlp import get_action_from_sentence
 from embedding import *
+from logger import log_gen
 
 app = Flask(__name__)
 app.secret_key = 'some_secret'
@@ -23,14 +24,12 @@ app.secret_key = 'some_secret'
 
 w2v = model_load()
 
-#logging stuff
-logger = logging.getLogger('myapp')
-hdlr = logging.FileHandler('nlplotlib.log')
-logger.addHandler(hdlr)
-logger.setLevel(logging.INFO)
-
 #get nerual net generator
 nns = ea((50, 20, 20, 10))
+next(nns)
+
+log = log_gen()
+next(log)
 
 def parse_query(query):
     """
@@ -54,10 +53,9 @@ def model_update(score):
     """
     pass
 
+       
 @app.route("/")
 def home():
-    ver = sys.version_info[0]
-    logger.info(ver)
     return render_template("home.html")
 
 @app.route("/submitted", methods=['POST', 'GET'])
@@ -68,13 +66,9 @@ def submitted():
         query = result['query']
         #if no filepath, use iris.csv. 
         #also need to check extension in case plot uploaded
-        logger.info(query)
-        logger.info(f"query length { len(query) }")
         parsed = get_action_from_sentence(query)
         complements = parsed[1]
         embed = sentence_embed(w2v, complements)
-        logging.info(complements)
-        logging.info(embed)
 
         if not result['file']:
             datapath = 'static/iris.csv'
@@ -82,12 +76,14 @@ def submitted():
             datapath = result['file']
 
         #call NN
-        next(nns)
+        # next(nns)
         #send query to ea, get prediction
         prediction = nns.send(embed)
 
         #use prediction to make plot
         plotname, time = make_plot(prediction, 1)
+
+        log.send((query, parsed, embed, plotname))
 
         return render_template("submitted.html", plotname=plotname,\
             result=result, time=time)
@@ -98,8 +94,11 @@ def feedback():
         result = request.form['rating']
         logger.info(result)
         #send feedback to NN
-        next(nns)
+        # next(nns)
         nns.send(float(result))
-    return "Feedback recorded!"
+
+        log.send(result)
+    return ('', 204)
+    # return "Feedback recorded!"
 if __name__ == "__main__":
     app.run()

@@ -109,10 +109,19 @@ Time: {{time}}
     class="half" for="starhalf" title="Sucks big time - 0.5
     stars"></label><br>
 </fieldset>
-    <input type="submit" value="Submit" id="disable">
+    <input type="submit" value="Submit" id="feedback-submit" onclick="thanks()">
 </form>
 
 <br>
+
+<script>
+function thanks(){
+    var button = document.getElementById("feedback-submit")
+    button.value = "Thanks!";
+    button.disabled = true;
+    
+}
+</script>
 
 <button class="button">Download</button>
 
