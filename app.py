@@ -17,6 +17,8 @@ from nn import ea
 # from embedding import *
 from logger import log_gen
 
+logging.basicConfig(filename='main.log',level=logging.DEBUG)
+
 app = Flask(__name__)
 app.secret_key = 'some_secret'
 
@@ -86,7 +88,6 @@ def submitted():
 
         #use prediction to make plot
         plotname, time = make_plot(1, 1)
-        print(plotname)
 
         log.send((query, parsed, embed, plotname))
 
@@ -95,10 +96,13 @@ def submitted():
 
 @app.route("/feedback", methods=['POST', 'GET'])
 def feedback():
+    print("reached")
+    logging.info("REACHED")
     if request.method == 'POST':
         result = request.form['rating']
-        logger.info(result)
         #send feedback to NN
+        logging.info("HIIII")
+        logging.info(result)
         next(nns)
         nns.send(float(result))
         log.send(result)
