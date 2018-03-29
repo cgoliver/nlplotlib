@@ -17,7 +17,7 @@ from nn import ea
 # from embedding import *
 from logger import log_gen
 
-logging.basicConfig(filename='main.log',level=logging.DEBUG)
+# logging.basicConfig(filename='main.log',level=logging.DEBUG)
 
 app = Flask(__name__)
 app.secret_key = 'some_secret'
@@ -97,7 +97,7 @@ def submitted():
 @app.route("/feedback", methods=['POST', 'GET'])
 def feedback():
     print("reached")
-    logging.info("REACHED")
+    # logging.info("REACHED")
     if request.method == 'POST':
         result = request.form['rating']
         #send feedback to NN
