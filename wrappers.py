@@ -13,7 +13,8 @@ def xx_make_line_plot():
     xs = np.random.randn(10)
     fig, ax = plt.subplots()
     ax.plot(xs)
-    path =  "static/{}.png".format(uuid.uuid1())
+    name =  str(uuid.uuid1()) + '.png'
+    path = os.path.join("static", "plots",name)
     fig.savefig(path, format="png")
         
     return path

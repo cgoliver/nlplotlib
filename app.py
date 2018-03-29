@@ -27,7 +27,7 @@ app.secret_key = 'some_secret'
 # w2v = model_load()
 
 #get nerual net generator
-nns = ea((50, 20, 20, 10), popsize=3)
+nns = ea((50, 20, 20, 10), popsize=20)
 next(nns)
 
 log = log_gen()
@@ -101,8 +101,6 @@ def feedback():
     if request.method == 'POST':
         result = request.form['rating']
         #send feedback to NN
-        logging.info("HIIII")
-        logging.info(result)
         next(nns)
         stats = nns.send(float(result))
         next(nns)
