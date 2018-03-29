@@ -27,7 +27,7 @@ app.secret_key = 'some_secret'
 # w2v = model_load()
 
 #get nerual net generator
-nns = ea((50, 20, 20, 10))
+nns = ea((50, 20, 20, 10), popsize=3)
 next(nns)
 
 log = log_gen()
@@ -104,8 +104,9 @@ def feedback():
         logging.info("HIIII")
         logging.info(result)
         next(nns)
-        nns.send(float(result))
-        log.send(result)
+        stats = nns.send(float(result))
+        next(nns)
+        log.send((result, stats))
     return ('', 204)
     # return "Feedback recorded!"
     # return render_template("home.html")

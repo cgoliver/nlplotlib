@@ -79,20 +79,27 @@ def replicate(nn):
     """
     Return the child of `nn` with weights shifted by Gaussian noise.
     """
-    for param in nn:
-        if param not in ["tested", "score"]:
-            nn[param] = mutate(param)
-    return nn
+    new_nn = {'score': 0}
+    new_model = []
+    for layer in nn['model']:
+        W, b = layer
+        new_model.append((mutate(W), mutate(b)))
+    new_nn['model'] = new_model
+    return new_nn
 
 def select(pop):
     """
     Select from `pop` and return next population.
     """
     scores = [nn['score'] for nn in pop]
-    fitnesses = scores / np.sum(scores)
+    N = np.sum([np.exp(nn['score'] / 5) for nn in pop])
+    fitnesses = [np.exp(nn['score']/5)/N for nn in pop]
     children = np.random.choice(pop, size=len(pop), replace=True, p=fitnesses)
     return [replicate(c) for c in children]
 
+def avg_score(pop):
+    scores = [nn['score'] for nn in pop]
+    return (np.mean(scores), np.std(scores))
 def dump_state(pops):
     pickle.dump(pops, open("static/EA.pickle", "wb"))
 
@@ -127,19 +134,19 @@ def update_EA(score, index):
     dump_state(pops)
     return 0
 
-def ea(shape):
+def ea(shape, popsize=20):
     """
     Main loop of EA, used to interface with user feedback and update model.
     """
-    in_dim = 2
-    out_dim = 1
-    hidden_dim = 5
     nn_ind = 0
-    pop = [mlp_build(shape) for _ in range(100)]
+    pop = [mlp_build(shape) for _ in range(popsize)]
+    gen = 0
     while True:
         if nn_ind == len(pop):
             nn_ind = 0
             pop = select(pop)
+            gen += 1
+            print(f"NEWGEN: {gen}")
         # get input vector
         x = yield
         pred = mlp_predict(pop[nn_ind], x)
@@ -148,19 +155,24 @@ def ea(shape):
         # yield pred
         score = yield
         pop[nn_ind]['score'] = score
-        # update_EA(score, nn_ind)
         nn_ind += 1
+        sc = avg_score(pop)
+        yield (gen, sc)
+        # update_EA(score, nn_ind)
 
 def test_ea(shape):
     g = ea(shape)
     next(g)
-    for _ in range(10):
+    for _ in range(100):
         query = np.array(np.random.randn((shape[0])))
         pred = g.send(query)
         print(pred)
         next(g)
         score = 1.2
-        g.send(score)
+        sc = g.send(score)
+        print(sc)
+        next(g)
+        # print(sc)
         
 if __name__ == "__main__":
     # in_dim = 2

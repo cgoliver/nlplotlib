@@ -15,9 +15,12 @@ def log_gen():
         plotpath = plotpath.strip()
         
         # trainlog.info(",".join([query, str(parse), str(embed), plotpath]))
-        score = yield
+        score, nn_info = yield
         score = str(score).strip()
-        logstring = ",".join([parse, embed, plotpath, score]) + "\n"
+        gen, stats = nn_info
+        avg_sc, std_sc = stats
+        logstring = ",".join([parse, embed, plotpath, score, str(gen),\
+            str(avg_sc), str(std_sc) + "\n"])
         logstring = "".join(logstring.split()) + "," +  query.strip() + "\n"
         trainlog.info(logstring)
 if __name__ == "__main__":
