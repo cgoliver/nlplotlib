@@ -73,7 +73,7 @@ h1 { font-size: 1.5em; margin: 10px;  }
 
 {% block result %}
 
-<img src="{{ url_for('static', filename='plots/{}'.format(plotname))}}">
+<img src="{{ url_for('static', filename='plots/{}/plot.png'.format(plotname))}}">
 
 {% with messages = get_flashed_messages() %}
          {% if messages %}
@@ -124,6 +124,9 @@ function thanks(){
     form.submit();
 }
 </script>
+
+<a href="{{ url_for('static', filename='plots/{}.zip'.format(plotname))}}" download> Download
+</a>
 
 <button class="button">Download</button>
 

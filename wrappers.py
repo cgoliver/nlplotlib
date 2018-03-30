@@ -3,6 +3,7 @@ Plotting wrappers.
 """
 import uuid
 import os
+import shutil
 import numpy as np
 import matplotlib as mpl
 mpl.use('Agg')
@@ -13,9 +14,10 @@ def xx_make_line_plot():
     xs = np.random.randn(10)
     fig, ax = plt.subplots()
     ax.plot(xs)
-    name =  str(uuid.uuid1()) + '.png'
-    path = os.path.join("static", "plots",name)
-    fig.savefig(path, format="png")
+    name =  str(uuid.uuid1())
+    path = os.path.join("static", "plots", name)
+    os.makedirs(path)
+    fig.savefig(os.path.join(path, "plot.png"), format="png")
         
     return path
 def xx_make_scatter_plot():
@@ -23,9 +25,10 @@ def xx_make_scatter_plot():
     ys = np.random.randn(10)
     fig, ax = plt.subplots()
     plt.scatter(xs, ys)
-    name =  str(uuid.uuid1()) + '.png'
+    name =  str(uuid.uuid1())
     path = os.path.join("static", "plots",name)
-    fig.savefig(path, format="png")
+    os.makedirs(path)
+    fig.savefig(os.path.join(path, "plot.png"), format="png")
     return name  
 
 if __name__ == "__main__":
