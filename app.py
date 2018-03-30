@@ -33,29 +33,6 @@ next(nns)
 log = log_gen()
 next(log)
 
-def parse_query(query):
-    """
-    Parse query into vector.
-    """
-    pass
-
-def graph_gen(query, data):
-    """
-    i.   Pass query to parser.
-    ii.  Pass parsed query to EA.
-    iii. Create graph with EA prediction.
-
-    Returns path to figure.
-    """
-    pass
-
-def model_update(score):
-    """
-    Update EA with `score` from user.
-    """
-    pass
-
-       
 @app.route("/")
 def home():
     return render_template("home.html")
