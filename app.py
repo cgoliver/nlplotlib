@@ -66,6 +66,8 @@ def submitted():
         #use prediction to make plot
         plotname, time = make_plot(1, 1)
 
+        #make zip of plot folder
+
         log.send((query, parsed, embed, plotname))
 
         return render_template("submitted.html", plotname=plotname,\
