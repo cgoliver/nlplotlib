@@ -18,7 +18,7 @@ def xx_make_line_plot():
     path = os.path.join("static", "plots", name)
     os.makedirs(path)
     fig.savefig(os.path.join(path, "plot.png"), format="png")
-    return path
+    return name 
 def xx_make_scatter_plot():
     xs = np.random.randn(10)
     ys = np.random.randn(10)
@@ -28,7 +28,7 @@ def xx_make_scatter_plot():
     path = os.path.join("static", "plots",name)
     os.makedirs(path)
     fig.savefig(os.path.join(path, "plot.png"), format="png")
-    return path 
+    return name 
 
 if __name__ == "__main__":
     xx_make_line_plot()

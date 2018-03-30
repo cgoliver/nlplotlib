@@ -1,4 +1,5 @@
 import os
+import shutil
 import sys
 import logging
 
@@ -20,7 +21,6 @@ from logger import log_gen
 # logging.basicConfig(filename='main.log',level=logging.DEBUG)
 
 app = Flask(__name__)
-app.secret_key = 'some_secret'
 
 #load word2vec model
 
@@ -52,21 +52,20 @@ def submitted():
         complements = ['comp', 'blo']
         embed = np.zeros((50))
 
-
         if not result['file']:
             datapath = 'static/iris.csv'
         else:
             datapath = result['file']
 
-        #call NN
-        # next(nns)
         #send query to ea, get prediction
         prediction = nns.send(embed)
 
         #use prediction to make plot
         plotname, time = make_plot(1, 1)
 
+        plotpath = os.path.join('static', 'plots', plotname)
         #make zip of plot folder
+        shutil.make_archive(plotpath , 'zip', plotpath)
 
         log.send((query, parsed, embed, plotname))
 

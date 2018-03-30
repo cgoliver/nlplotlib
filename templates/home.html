@@ -18,10 +18,12 @@
 
 <img src="{{url_for('static', filename='nlplotlib.svg')}}" id="svgMain"> 
 
-<button type="button" id="about-btn" onclick="toggleShow('about')">About</button>
+<!-- <button type="button" id="about-btn" onclick="toggleShow('about')">About</button>-->
+<a href="#" class="button default" onclick="toggleShow('about')">Buttons</a>
 <div id="about" style=display:none>
 Bla bla this is how it works.
 </div>
+
 
 <div id="query">
 	<form action="/submitted" method="POST" onsubmit="showDiv('loading')">
