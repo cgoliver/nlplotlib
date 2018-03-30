@@ -32,7 +32,7 @@ def file_to_column(file,col):
     return col
 
 #draws plot from input command column names parsed directly from the text, hard coded from info from the attached csv.
-def xx_draw_plot(actions, values):
+def xx_draw_plot(actions, values, id):
     """
     values is a tuple (datafile, columns)
     action is a list of words
@@ -50,7 +50,7 @@ def xx_draw_plot(actions, values):
             to_plot.append(file_to_column(file,data))
 
         plt.scatter(*to_plot)
-    return save_fig(fig, data=to_plot)
+    return save_fig(fig, data=to_plot, name=id)
 
 # plot =draw_plot(["draw", "scatter", "plot"], ("grades.csv",["Test2","Final"]))
 # plt.show(plot)
@@ -58,7 +58,7 @@ def xx_draw_plot(actions, values):
 # plt.show(plot)
 
 
-def yy_add_title(action, values):
+def yy_add_title(action, values, id):
     maxl = -1
     this_title = ""
     for elements in values:
@@ -67,10 +67,10 @@ def yy_add_title(action, values):
     plot = pickle.load(open('plot.pickle','rb'))
     plot.suptitle(this_title)
     # pickle.dump(plot,open('plot.pickle','wb'))
-    return save_fig(plot)
+    return save_fig(plot, name=id)
 # add_title(["add","title"],["This is a title"])
 
-def yy_set_ax_title(action,values):
+def yy_set_ax_title(action,values, id):
     maxl = -1
     this_title = ""
     for elements in values:
@@ -83,12 +83,13 @@ def yy_set_ax_title(action,values):
     elif "y-" in "".join(action) or " y " in "".join(action):
         ax.set_ylabel(this_title)
     # pickle.dump(plot,open('plot.pickle','wb'))
-    return save_fig(plot) 
+    return save_fig(plot, name=id)
 # plot = set_ax_title(["add","y-title"],["This is an ax"])
 # plt.show(plot)
 
-def yy_change_color(action,values):
+def yy_change_color(action,values, id):
     colorlist =[ x[0] for x in matplotlib.colors.cnames.items()]
+    this_color = 'black'
     for element in values:
         if element in colorlist:
             this_color = element
@@ -97,11 +98,11 @@ def yy_change_color(action,values):
     children = ax.get_children()
     children[0].set_color(this_color)
     # pickle.dump(plot,open('plot.pickle','wb'))
-    return save_fig(plot) 
+    return save_fig(plot, name=id)
 # plot = change_color(["change","final"],["red"])
 # plt.show(plot)
 
-def yy_add_line(action,values):
+def yy_add_line(action,values, id):
     data_list = pickle.load(open("plot_data.pickle","rb"))
     file,columns = values
     plot = pickle.load(open('plot.pickle', 'rb'))
@@ -112,14 +113,14 @@ def yy_add_line(action,values):
         data_list.append(to_plot)
         ax = plot.get_axes()[0]
         ax.plot(to_plot)
-    return save_plot(plot, data=data_list)
+    return save_fig(plot, data=data_list,  name=id)
     # pickle.dump(plot,open('plot.pickle','wb'))
     # pickle.dump(data_list,open('plot_data.pickle','wb'))
     # return plot
 # plot = add_line(["add","line"],("grades.csv",["Test1"]))
 # plt.show(plot)
 
-def yy_set_axis_range(action,values):
+def yy_set_axis_range(action,values, id):
     start,end = values
     plot = pickle.load(open('plot.pickle', 'rb'))
     ax = plot.get_axes()[0]
@@ -128,10 +129,10 @@ def yy_set_axis_range(action,values):
     elif "y-" in "".join(action) or " y " in "".join(action):
         ax.set_ylim(start, end)
     # pickle.dump(plot,open('plot.pickle','wb'))
-    return save_plot(plot)
+    return save_fig(plot, name=id)
     # return plot
 
-def yy_set_n_ticks(action,values):
+def yy_set_n_ticks(action,values, id):
     for val in values:
         if val.isdigit():
             n = val
@@ -143,10 +144,10 @@ def yy_set_n_ticks(action,values):
     elif "y-" in "".join(action) or " y " in "".join(action):
         ax.set_yticks(np.arange(n))
     # pickle.dump(plot,open('plot.pickle','wb'))
-    return save_fig(plot)
+    return save_fig(plot, name=id)
     # return plot
 
-def yy_add_ticks_labels(action,values):
+def yy_add_ticks_labels(action,values, id):
     data_list = pickle.load(open("plot_data.pickle","rb"))
     file,columns = values
     plot = pickle.load(open('plot.pickle', 'rb'))
@@ -159,6 +160,6 @@ def yy_add_ticks_labels(action,values):
     # pickle.dump(plot,open('plot.pickle','wb'))
     # pickle.dump(data_list,open('plot_data.pickle','wb'))
     # return plot
-    return save_fig(plot, data=data_list)
+    return save_fig(plot, data=data_list, name=id)
 # plot = add_ticks_labels(["set","x-","ticks"],("grades.csv",["First name"]))
 # plt.show(plot)
