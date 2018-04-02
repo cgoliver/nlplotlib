@@ -1,4 +1,5 @@
 from matplotlib import pyplot as plt
+import shutil
 import pickle
 import pandas
 import matplotlib
@@ -11,6 +12,10 @@ def save_fig(fig, name=None, data=None):
     if not name:
         name =  str(uuid.uuid1())
     path = os.path.join("static", "plots", name)
+    try:
+        os.mkdir(path)
+    except:
+        pass
     fig.savefig(path+"/plot.png", format="png")
     pickle.dump(fig, open(path + "/plot.pickle", "wb"))
     if data:
