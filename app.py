@@ -4,6 +4,7 @@ import sys
 import logging
 import uuid
 
+import pandas as pd
 from flask import Flask
 from flask import render_template
 from flask import request
@@ -15,9 +16,10 @@ import numpy as np
 
 from plotter import make_plot
 from nn import ea
-# from romanlp import get_action_from_sentence
-# from embedding import *
+from romanlp import get_action_from_sentence
+from embedding import *
 from logger import log_gen
+from roman_wrappers import *
 
 # logging.basicConfig(filename='main.log',level=logging.DEBUG)
 
@@ -61,53 +63,65 @@ def submitted():
         embed = np.zeros((50))
 
 
-        newplot = False
-        plot_dir = result['plotid']
-        if 'file' not in request.files:
-            if not plot_dir:
-                #make new plot dir
-                datapath = 'static/iris.csv'
-                plot_dir = str(uuid.uuid1())
-                print(plot_dir)
-            elif plot_dir not in os.listdir(app.config['UPLOAD_FOLDER']):
+        new_plot = False
+        plot_id = result['plotid']
+        plot_dir = None
+        if plot_id:
+            if plot_id not in os.listdir(app.config['UPLOAD_FOLDER']):
                 return "YOUR PLOT WAS NOT FOUND"
             else:
-                #ok we have their plot
-                pass
+                print("MODIFYING EXISTING PLOT")
+                plot_dir = os.path.join(app.config['UPLOAD_FOLDER'], plot_id)
         else:
-            #save their data
+            #need to create new plot folder
+            plot_id = str(uuid.uuid1())
+            plot_dir = os.path.join(app.config['UPLOAD_FOLDER'], plot_id)
+            os.makedirs(plot_dir)
+            new_plot = True
             f = request.files['file']
-            filename = f.filename
-            s_filename = secure_filename(filename)
-            #check if existing plot
-            plot_dir = str(uuid.uuid1())
+            #using default dataset
+            if f.filename == '':
+                print("USING DEFAULT DATA")
+                datapath = 'static/iris.csv'
+                shutil.copyfile(datapath, os.path.join(plot_dir, "data.csv"))
+            #using uploaded dataset
+            else:
+                print("SAVING YOUR DATA")
+                filename = f.filename
+                # s_filename = secure_filename(filename)
+                try:
+                    f.save(os.path.join(plot_dir, "data.csv"))
+                except Exception as e:
+                    return "ERROR SAVING FILE"
 
-            try:
-                savepath = os.path.join(app.config['UPLOAD_FOLDER'],\
-                    plot_dir)
-                os.makedirs(savepath)
-                f.save(os.path.join(savepath, s_filename))
-            except Exception as e:
-                return "SAVING ERROR TRY AGAIN"
+        print(plot_dir)
+        #extract column names from datafile
+        df = pd.read_csv(os.path.join(plot_dir, "data.csv"))
+        colnames = list(df.columns)
 
-        # if newplot:
-           # xx_draw_plot(actions, values, id) 
+        #parser output: (['Draw','scatter', 'plot', 'testcsv'], [])
+        if new_plot:
+            print(query)
+            parsed = get_action_from_sentence(query, columns=colnames)
+            actions, values = parsed
+            print("CALLING DRAW PLOT")
+            xx_draw_plot(actions, ("data.csv", colnames), plot_dir) 
         # else:
            # call NN to plot 
         #send query to ea, get prediction
-        prediction = nns.send(embed)
+        # prediction = nns.send(embed)
 
         #use prediction to make plot
-        plotname, time = make_plot(1, 1)
+        # plotname, time = make_plot(1, 1)
 
-        plotpath = os.path.join('static', 'plots', plotname)
+        # plotpath = os.path.join('static', 'plots', plotname)
         #make zip of plot folder
-        shutil.make_archive(plotpath , 'zip', plotpath)
+        # shutil.make_archive(plotpath , 'zip', plotpath)
 
-        log.send((query, parsed, embed, plotname))
+        # log.send((query, parsed, embed, plotname))
 
-        return render_template("submitted.html", plotname=plotname,\
-            result=result, time=time)
+        return render_template("submitted.html", plotname=plot_id,\
+            result=result, time=5)
 
 @app.route("/feedback", methods=['POST', 'GET'])
 def feedback():

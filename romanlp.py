@@ -125,7 +125,7 @@ def comp_to_val(comp,values):
     return(comp,values)
 
 
-def get_action_from_sentence(text):
+def get_action_from_sentence(text, columns=None):
     if "\"" not in text:
         words = nltk.tokenize.word_tokenize(text)
 
@@ -165,7 +165,7 @@ def get_action_from_sentence(text):
     else:
 
         value=text.split("\"")[1]
-        words = nltk.tokenize.word_tokenize(text)
+        words = nltk.tokenize.kword_tokenize(text)
         full_text = text
         text = text.replace(value,"")
         regex = re.compile('[^a-zA-Z !?]')
@@ -189,17 +189,28 @@ def get_action_from_sentence(text):
         # print("Action : ", verb, complement)
         # print("Quantity : ", value)
         # print("-------------------------------------------")
-    return([verb,complement,value])
+        complement = [verb] + complement
+    used_columns = []
+    if columns:
+        for col in columns:
+            if col in full_text:
+                used_columns.append(col)
+                
+        return (complement , ("data.csv", used_columns))
+    else:
+        return (complement, values)
+    # return([verb,complement,value])
 if __name__ == "__main__":
-	t1 = "Make a scatter plot from this data file."
+	t1 = "Make a scatter plotk from this data file."
 	t2 = "Make the title bigger and blue."
 	t3 = """Add a title "Number of pumpkins per second" to the x-axis."""
 	t4 = "Remove 50% of the ticks on the y-axis. "
 	t5 = "Make the y-axis go from 0 to 1."
 	#get_action_from_sentence(t1)
 	#get_action_from_sentence(t2)
-	#get_action_from_sentence(t3)
+	#get_action_from_sentencje(t3)
 	#print(get_action_from_sentence(t4))
 	#get_action_from_sentence(t5)
 
-	print(get_action_from_sentence("Draw a scatter plot of test.csv"))
+	# print(get_action_from_sentence("Draw a scatter plot of test.csv"))
+	print(get_action_from_sentence("draw a line plot of Petal_Length"))
