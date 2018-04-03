@@ -2,6 +2,7 @@ import os
 import shutil
 import sys
 import logging
+import uuid
 
 from flask import Flask
 from flask import render_template
@@ -20,7 +21,11 @@ from logger import log_gen
 
 # logging.basicConfig(filename='main.log',level=logging.DEBUG)
 
+UPLOAD_FOLDER = '/Users/carlosgonzalezoliver/Projects/NLPlotlib/static/plots'
+
 app = Flask(__name__)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 #load word2vec model
 
@@ -49,13 +54,43 @@ def submitted():
         # complements = parsed[1]
         # embed = sentence_embed(w2v, complements)
         parsed = ['bla', 'blo']
+        actions = ["draw", "scatter", "plot"]
+        values = ("grades.csv",["Test2","Final"])
+        plot_id = "AA"
         complements = ['comp', 'blo']
         embed = np.zeros((50))
 
-        if not result['file']:
+
+        if 'file' not in request.files:
             datapath = 'static/iris.csv'
+            plot_id = str(uuid.uuid1())
+            print(plot_id)
         else:
-            datapath = result['file']
+            pass
+            f = request.files['file']
+            print(f)
+            filename = f.filename
+            s_filename = secure_filename(filename)
+            #check if existing plot
+            file_id = filename.split(".")[0]
+            file_exists = file_id in os.listdir(app.config['UPLOAD_FOLDER'])
+            if filename.endswith(".pickle"):
+                if file_exists:
+                    filedir = file_id
+                else:
+                    return "DID NOT FIND THAT PLOT IN OUR DATABASE"
+            else:
+                filedir = str(uuid.uuid1())
+
+            try:
+                savepath = os.path.join(app.config['UPLOAD_FOLDER'],\
+                    filedir)
+                os.makedirs(savepath)
+                print(savepath)
+                f.save(os.path.join(savepath, s_filename))
+            except Exception as e:
+                print(e)
+                return "SAVING ERROR TRY AGAIN"
 
         #send query to ea, get prediction
         prediction = nns.send(embed)
@@ -87,4 +122,4 @@ def feedback():
     # return "Feedback recorded!"
     # return render_template("home.html")
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
