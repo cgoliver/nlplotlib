@@ -61,37 +61,39 @@ def submitted():
         embed = np.zeros((50))
 
 
+        newplot = False
+        plot_dir = result['plotid']
         if 'file' not in request.files:
-            datapath = 'static/iris.csv'
-            plot_id = str(uuid.uuid1())
-            print(plot_id)
+            if not plot_dir:
+                #make new plot dir
+                datapath = 'static/iris.csv'
+                plot_dir = str(uuid.uuid1())
+                print(plot_dir)
+            elif plot_dir not in os.listdir(app.config['UPLOAD_FOLDER']):
+                return "YOUR PLOT WAS NOT FOUND"
+            else:
+                #ok we have their plot
+                pass
         else:
-            pass
+            #save their data
             f = request.files['file']
-            print(f)
             filename = f.filename
             s_filename = secure_filename(filename)
             #check if existing plot
-            file_id = filename.split(".")[0]
-            file_exists = file_id in os.listdir(app.config['UPLOAD_FOLDER'])
-            if filename.endswith(".pickle"):
-                if file_exists:
-                    filedir = file_id
-                else:
-                    return "DID NOT FIND THAT PLOT IN OUR DATABASE"
-            else:
-                filedir = str(uuid.uuid1())
+            plot_dir = str(uuid.uuid1())
 
             try:
                 savepath = os.path.join(app.config['UPLOAD_FOLDER'],\
-                    filedir)
+                    plot_dir)
                 os.makedirs(savepath)
-                print(savepath)
                 f.save(os.path.join(savepath, s_filename))
             except Exception as e:
-                print(e)
                 return "SAVING ERROR TRY AGAIN"
 
+        # if newplot:
+           # xx_draw_plot(actions, values, id) 
+        # else:
+           # call NN to plot 
         #send query to ea, get prediction
         prediction = nns.send(embed)
 

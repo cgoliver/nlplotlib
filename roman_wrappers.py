@@ -78,8 +78,8 @@ def xx_draw_plot(actions, values, id):
 
 #plot =xx_draw_plot(["draw", "scatter", "plot"], ("grades.csv",["Test2","Final"]),"AA")
 #plt.show(plot)
-plot =xx_draw_plot(["draw", "line", "plot"], ("grades.csv",["Test2","Final"]),"AA")
-plt.show(plot)
+# plot =xx_draw_plot(["draw", "line", "plot"], ("grades.csv",["Test2","Final"]),"AA")
+# plt.show(plot)
 #plot =xx_draw_plot(["draw", "histogram", "plot"], ("grades.csv",["Final"]),"AA")
 #plt.show(plot)
 
@@ -93,8 +93,8 @@ def yy_add_title(action, values, id):
     plot.suptitle(this_title)
     # pickle.dump(plot,open('plot.pickle','wb'))
     return save_fig(plot, name=id)
-plot = yy_add_title(["add","title"],["This is a title"],"AA")
-plt.show()
+# plot = yy_add_title(["add","title"],["This is a title"],"AA")
+# plt.show()
 
 def yy_set_ax_title(action,values, id):
     maxl = -1
@@ -110,8 +110,8 @@ def yy_set_ax_title(action,values, id):
         ax.set_ylabel(this_title)
     # pickle.dump(plot,open('plot.pickle','wb'))
     return save_fig(plot, name=id)
-plot = yy_set_ax_title(["add","y-title"],["This is an ax"],"AA")
-plt.show(plot)
+# plot = yy_set_ax_title(["add","y-title"],["This is an ax"],"AA")
+# plt.show(plot)
 
 def yy_change_color(action,values, id):
     colorlist =[ x[0] for x in matplotlib.colors.cnames.items()]
@@ -138,8 +138,8 @@ def yy_change_color(action,values, id):
 
     # pickle.dump(plot,open('plot.pickle','wb'))
     return save_fig(plot, name=id)
-plot = yy_change_color(["change","Final"],["red"], "AA")
-plt.show(plot)
+# plot = yy_change_color(["change","Final"],["red"], "AA")
+# plt.show(plot)
 
 def yy_add_line(action,values, id):
     data = pickle.load(open("static/plots/" + str(id) + "/data.pickle", 'rb'))
@@ -159,8 +159,8 @@ def yy_add_line(action,values, id):
     # pickle.dump(plot,open('plot.pickle','wb'))
     # pickle.dump(data_list,open('plot_data.pickle','wb'))
     # return plot
-plot = yy_add_line(["add","line"],("grades.csv",["Test1"]),"AA")
-plt.show(plot)
+# plot = yy_add_line(["add","line"],("grades.csv",["Test1"]),"AA")
+# plt.show(plot)
 
 def yy_set_axis_range(action,values, id):
     start,end = values
@@ -174,8 +174,8 @@ def yy_set_axis_range(action,values, id):
     return save_fig(plot, name=id)
     # return plot
 
-plot = yy_set_axis_range(["add","y-title"],[0,5],"AA")
-plt.show(plot)
+# plot = yy_set_axis_range(["add","y-title"],[0,5],"AA")
+# plt.show(plot)
 
 
 def yy_set_n_ticks(action,values, id):
@@ -192,8 +192,8 @@ def yy_set_n_ticks(action,values, id):
     # pickle.dump(plot,open('plot.pickle','wb'))
     return save_fig(plot, name=id)
     # return plot
-plot = yy_set_n_ticks(["set","y-ticks"],[40],"AA")
-plt.show(plot)
+# plot = yy_set_n_ticks(["set","y-ticks"],[40],"AA")
+# plt.show(plot)
 #def yy_add_ticks_labels(action,values, id):
 #    data_list = pickle.load(open("plot_data.pickle","rb"))
 #    file,columns = values
