@@ -191,9 +191,10 @@ def get_action_from_sentence(text, columns=None):
         # print("-------------------------------------------")
         complement = [verb] + complement
     if columns:
-        print(f"PARSER: {full_text}")
+        print(f"PARSER: {text}")
+        print(f"PARSER COLUMNS: {columns}")
         used_cols = [col for col in columns if col in full_text]
-        print(f"used columns: {used_cols}")
+        print(f"used columns parser: {used_cols}")
         return (complement , ("data.csv", used_cols))
     else:
         return (complement, values)

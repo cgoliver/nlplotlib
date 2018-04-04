@@ -39,7 +39,7 @@ def xx_draw_plot(actions, values, plot_id):
     print(f"actions: {actions}")
     file, columns = values
     print(f"wrapper {columns}")
-    file = os.path.join("static", "plot", plot_id, "data.csv")
+    file = os.path.join("static", "plots", plot_id, "data.csv")
     fig = plt.figure()
     to_plot = []
     colorlist =[ x[0] for x in matplotlib.colors.cnames.items()]
@@ -165,6 +165,8 @@ def yy_add_line(action,values, plot_id):
 
 def yy_set_axis_range(action,values, plot_id):
     start,end = values
+    start = start.value
+    end = end.value
     plot = pickle.load(open("static/plots/"+str(plot_id)+"/plot.pickle",'rb'))
     ax = plot.get_axes()[0]
     if "x-" in "".join(action) or " x " in "".join(action):
@@ -180,6 +182,7 @@ def yy_set_axis_range(action,values, plot_id):
 
 
 def yy_set_n_ticks(action,values, plot_id):
+    values = [i.value for i in values]
     for val in values:
         if str(val).isdigit():
             n = val

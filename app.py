@@ -102,11 +102,15 @@ def submitted():
         #parser output: (['Draw','scatter', 'plot', 'testcsv'], [])
         if new_plot:
             print(query)
+            print(f"server columns: {colnames}")
             parsed = get_action_from_sentence(query, columns=colnames)
             actions, values = parsed
             print("CALLING DRAW PLOT")
-            xx_draw_plot(actions, values, plot_dir) 
-        # else:
+            xx_draw_plot(actions, values, plot_id) 
+        else:
+            parsed = get_action_from_sentence(query)
+            actions, values = parsed
+            yy_add_title(actions, values, plot_id)
            # call NN to plot 
         #send query to ea, get prediction
         # prediction = nns.send(embed)
@@ -121,7 +125,7 @@ def submitted():
         # log.send((query, parsed, embed, plotname))
 
         return render_template("submitted.html", plotname=plot_id,\
-            result=result, time=5)
+            result=result, plotid=plot_id)
 
 @app.route("/feedback", methods=['POST', 'GET'])
 def feedback():
