@@ -105,7 +105,7 @@ def submitted():
             parsed = get_action_from_sentence(query, columns=colnames)
             actions, values = parsed
             print("CALLING DRAW PLOT")
-            xx_draw_plot(actions, ("data.csv", colnames), plot_dir) 
+            xx_draw_plot(actions, values, plot_dir) 
         # else:
            # call NN to plot 
         #send query to ea, get prediction

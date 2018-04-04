@@ -36,9 +36,9 @@ def xx_draw_plot(actions, values, plot_id):
     values is a tuple (datafile, columns)
     action is a list of words
     """
-    print(actions)
+    print(f"actions: {actions}")
     file, columns = values
-    print(columns)
+    print(f"wrapper {columns}")
     file = os.path.join("static", "plot", plot_id, "data.csv")
     fig = plt.figure()
     to_plot = []
@@ -50,7 +50,7 @@ def xx_draw_plot(actions, values, plot_id):
         for index,data in enumerate(columns):
             columns_in_data.append(data)
             to_plot = file_to_column(file,data)
-            print(to_plot)
+            print(f"{to_plot}")
             this_color = random.choice(colorlist)
             plt.plot(to_plot, color=this_color)
             colorlist.remove(this_color)

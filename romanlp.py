@@ -190,13 +190,11 @@ def get_action_from_sentence(text, columns=None):
         # print("Quantity : ", value)
         # print("-------------------------------------------")
         complement = [verb] + complement
-    used_columns = []
     if columns:
-        for col in columns:
-            if col in full_text:
-                used_columns.append(col)
-                
-        return (complement , ("data.csv", used_columns))
+        print(f"PARSER: {full_text}")
+        used_cols = [col for col in columns if col in full_text]
+        print(f"used columns: {used_cols}")
+        return (complement , ("data.csv", used_cols))
     else:
         return (complement, values)
     # return([verb,complement,value])
