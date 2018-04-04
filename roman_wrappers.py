@@ -90,7 +90,9 @@ def yy_add_title(action, values, plot_id):
     for elements in values:
         if len(elements)> maxl:
             this_title = elements
-    plot = pickle.load(open("static/plots/"+str(id)+"/plot.pickle",'rb'))
+            maxl = len(this_title)
+    plot = pickle.load(open("static/plots/"+str(plot_id)+"/plot.pickle",'rb'))
+    print(this_title)
     plot.suptitle(this_title)
     # pickle.dump(plot,open('plot.pickle','wb'))
     return save_fig(plot, plot_id)

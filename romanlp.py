@@ -164,10 +164,10 @@ def get_action_from_sentence(text, columns=None):
         # print("-------------------------------------------")
     else:
 
-        value=text.split("\"")[1]
-        words = nltk.tokenize.kword_tokenize(text)
+        value=[text.split("\"")[1]]
+        words = nltk.tokenize.word_tokenize(text)
         full_text = text
-        text = text.replace(value,"")
+        text = text.replace(value[0],"")
         regex = re.compile('[^a-zA-Z !?]')
         text=regex.sub('', text)
         numbers = find_number(text)
@@ -197,7 +197,7 @@ def get_action_from_sentence(text, columns=None):
         print(f"used columns parser: {used_cols}")
         return (complement , ("data.csv", used_cols))
     else:
-        return (complement, values)
+        return (complement, value)
     # return([verb,complement,value])
 if __name__ == "__main__":
 	t1 = "Make a scatter plotk from this data file."

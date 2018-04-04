@@ -28,6 +28,7 @@ UPLOAD_FOLDER = '/Users/carlosgonzalezoliver/Projects/NLPlotlib/static/plots'
 app = Flask(__name__)
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 #load word2vec model
 
@@ -64,10 +65,11 @@ def submitted():
 
 
         new_plot = False
-        plot_id = result['plotid']
+        plot_id = result['plotid'].replace(' ', '')
         plot_dir = None
         if plot_id:
-            if plot_id not in os.listdir(app.config['UPLOAD_FOLDER']):
+            print(f"working on plot {plot_id}")
+            if plot_id.strip() not in os.listdir(app.config['UPLOAD_FOLDER']):
                 return "YOUR PLOT WAS NOT FOUND"
             else:
                 print("MODIFYING EXISTING PLOT")
@@ -118,9 +120,8 @@ def submitted():
         #use prediction to make plot
         # plotname, time = make_plot(1, 1)
 
-        # plotpath = os.path.join('static', 'plots', plotname)
         #make zip of plot folder
-        # shutil.make_archive(plotpath , 'zip', plotpath)
+        shutil.make_archive(plot_dir, 'zip', plot_dir)
 
         # log.send((query, parsed, embed, plotname))
 
