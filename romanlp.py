@@ -32,6 +32,7 @@ def get_type(text,word):
     #st.stanford_jar = ':'.join(stanford_jars)
     #result = dep_parser.raw_parse(text)
     pos = st.tag(text)
+    print(pos)
     for i in pos:
         if i[0]==word:
             return i[1]
@@ -68,8 +69,9 @@ def get_word_dependencies(text):
             dependencies[w1].append((w2,i[1]))
         else:
             dependencies[w1] = [(w2,i[1])]
-    #print(dependencies)
+    print(dependencies)
     return dependencies
+
 
 def get_complement_to_verb(text,verb):
     complement = []
@@ -83,16 +85,28 @@ def get_complement_to_verb(text,verb):
         if c not in dependencies:
             continue
         comp_of_comp = dependencies[c]
-        for d in comp_of_comp:
-            #print(get_type(text,d))
-            #print("D",d)
-            if "subj" in d[1]:
-                complement.append(d[0])
+        if c in ["plot","line","column"]:
+            for d in comp_of_comp:
+                if "compound" in d[1]:
+                    complement.append(d[0])
+                if "subj" in d[1]:
+                    complement.append(d[0])
 
-            if "conj" in d:
-                complement.append(d[0])
-            if "nmod" in d:
-                complement.append(d[0])
+                if "conj" in d:
+                    complement.append(d[0])
+                if "nmod" in d:
+                    complement.append(d[0])
+        else:
+            for d in comp_of_comp:
+                #print(get_type(text,d))
+                #print("D",d)
+                if "subj" in d[1]:
+                    complement.append(d[0])
+
+                if "conj" in d:
+                    complement.append(d[0])
+                if "nmod" in d:
+                    complement.append(d[0])
 
     #print(complement)
     return complement
@@ -149,9 +163,9 @@ def get_action_from_sentence(text, columns=None):
         #value = ",".join(value)
         #print(type(value))
         if "dimensionless" in value:
-            value= value.surface
+            value= value.value
         else:
-            value = [value[i] for i in range(len(value))]
+            value = [value[i].value for i in range(len(value))]
         order = nltk.tokenize.word_tokenize(text)
 
         complement.sort(key=lambda x: order.index(x))
@@ -200,16 +214,5 @@ def get_action_from_sentence(text, columns=None):
         return (complement, value)
     # return([verb,complement,value])
 if __name__ == "__main__":
-	t1 = "Make a scatter plotk from this data file."
-	t2 = "Make the title bigger and blue."
-	t3 = """Add a title "Number of pumpkins per second" to the x-axis."""
-	t4 = "Remove 50% of the ticks on the y-axis. "
-	t5 = "Make the y-axis go from 0 to 1."
-	#get_action_from_sentence(t1)
-	#get_action_from_sentence(t2)
-	#get_action_from_sentencje(t3)
-	#print(get_action_from_sentence(t4))
-	#get_action_from_sentence(t5)
-
-	# print(get_action_from_sentence("Draw a scatter plot of test.csv"))
-	print(get_action_from_sentence("draw a line plot of Petal_Length"))
+    print(get_action_from_sentence("Make a line plot of Petal_length"))
+    print(get_action_from_sentence("Draw a line plot of Petal_Length"))
