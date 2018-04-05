@@ -11,10 +11,12 @@ from flask import request
 from flask import flash
 from flask import redirect
 from flask import url_for
+from flask import session
 from werkzeug.utils import secure_filename
 import numpy as np
 
 from plotter import make_plot
+from nn import * 
 from nn import ea
 from romanlp import get_action_from_sentence
 from embedding import *
@@ -27,6 +29,7 @@ from roman_wrappers import *
 UPLOAD_FOLDER = '/Users/carlosgonzalezoliver/Projects/NLPlotlib/static/plots'
 
 app = Flask(__name__)
+app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
@@ -36,22 +39,21 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 glove = model_load()
 SO = model_load("Data/model_SO_w2v_15d.word2vec")
 
-embeddings = (glove, SO)
+embed_models= {"glove": (glove, "static/ea_glove.pickle"), "SO": (SO,\
+    "static/ea_SO.pickle")}
+
 
 #number of wrappers
 num_wrappers = len([f for f in dir(roman_wrappers) if f.startswith('yy_')])
 
 #get nerual net generator
-nns_glove = ea((50, 20, 20, num_wrappers), popsize=20)
-nns_SO = ea((15, 30, 30, num_wrappers), popsize=20)
-nns_list = (nns_glove, nns_SO)
-
-#call count
-call_count = 0
+# nns_glove = ea((50, 20, 20, num_wrappers), popsize=20)
+# nns_SO = ea((15, 30, 30, num_wrappers), popsize=20)
+# nns_list = (nns_glove, nns_SO)
 
 #initialize neural nets
-for nns in nns_list:
-    next(nns)
+# for nns in nns_list:
+    # next(nns)
 
 log = log_gen()
 next(log)
@@ -67,6 +69,9 @@ def submitted():
         result = request.form
 
         query = result['query']
+
+        session['test'] = random.randint(0, 100)
+        print(session['test'])
 
         new_plot = False
         plot_id = result['plotid'].replace(' ', '')
@@ -120,15 +125,17 @@ def submitted():
             #modifying plot
             parsed = get_action_from_sentence(query)
             actions, values = parsed
-            try:
-                embed = sentence_embed(embeddings[call_count%num_wrappers], actions)
-            except:
-                embed = np.zeros((50))
-            #send query to ea, get prediction
-            prediction = nns_list[call_count % num_wrappers].send(embed)
+            embed_choice = random.choice(list(embed_models.keys()))
+            emb, nn = embed_models[embed_choice]
+
+            embed = sentence_embed(emb, actions)
+
+            prediction, nn_ind = query_predict(embed, nn)
+
+            session['nn_ind'] = nn_ind
+            session['embedding'] = embed_choice
+
             print(prediction)
-            # call NN to plot 
-            # yy_add_title(actions, values, plot_id)
             #use prediction to make plot
             plotname, time = make_plot(prediction, actions, values, plot_id)
 
@@ -145,13 +152,11 @@ def feedback():
     print("reached")
     # logging.info("REACHED")
     if request.method == 'POST':
+        print(session['test'])
         result = request.form['rating']
-        #send feedback to NN
-        cur_nn = nns_list[call_count % num_wrappers]
-        next(cur_nn)
-        stats = cur_nn.send(float(result))
-        next(cur_nn)
-        # log.send((result, stats))
+        update_EA(float(result), session['nn_ind'],\
+            embed_models[session['embedding']])
+        log.send((result, stats))
     return ('', 204)
     # return "Feedback recorded!"
     # return render_template("home.html")

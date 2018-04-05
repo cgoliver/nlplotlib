@@ -101,18 +101,18 @@ def select(pop, max_score=5):
 def avg_score(pop):
     scores = [nn['score'] for nn in pop]
     return (np.mean(scores), np.std(scores))
-def dump_state(pops):
-    pickle.dump(pops, open("static/EA.pickle", "wb"))
+def dump_state(pops, pickle_path):
+    pickle.dump(pops, open(pickle_path, "wb"))
 
-def load_state():
-    return pickle.load(open("static/EA.pickle", "rb"))
+def load_state(pickle_path):
+    return pickle.load(open(pickle_path, "rb"))
 
-def query_predict(x):
+def query_predict(x, pickle_path):
     """
     Pick an nn that has not been tested and produce a prediction.
     If all have been tested, create next generation and produce prediction.
     """
-    pops = load_state()
+    pops = load_state(pickle_path)
     current_pop = pops[-1]
     #if we find an untested NN in current gen, get prediction
     for i, nn in enumerate(current_pop):
@@ -122,26 +122,26 @@ def query_predict(x):
     next_gen = select(current_pop) 
     pops.append(next_gen)
     ind, test_nn = random.choice(list(enumerate(next_gen)))
-    dump_state(pops)
+    dump_state(pops, pickle_path)
     return (mlp_predict(test_nn, x), ind)
 
-def update_EA(score, index):
+def update_EA(score, index, pickle_path):
     """
     Store the score of an nn at the current generation and dump to pickle.
     """
-    pops = load_state()
+    pops = load_state(pickle_path)
     current_pop = pops[-1]
     current_pop[index]['score'] = score
     current_pop[index]['scored'] = True 
-    dump_state(pops)
+    dump_state(pops, pickle_path)
     return 0
 
-def genesis(shape, popsize=20):
+def genesis(shape, pickle_path, popsize=20):
     """
     Make first generation
     """
     pops = [[mlp_build(shape) for _ in range(popsize)]]
-    dump_state(pops)
+    dump_state(pops, pickle_path)
     pass
 
 def ea(shape, popsize=20):
@@ -184,11 +184,11 @@ def test_ea(shape):
         next(g)
         # print(sc)
         
-def pickle_test():
+def pickle_test(pickle_path):
     genesis((10, 14, 3))
     for _ in range(10):
         for _ in range(20):
-            cur_gen = load_state()[-1]
+            cur_gen = load_state(pickle_path)[-1]
             p, ind = query_predict(np.zeros((10)))
             update_EA(random.randint(0, 6), ind)
         
@@ -204,5 +204,6 @@ if __name__ == "__main__":
     # print(mlp)
     # print(mlp_predict(mlp, np.array(np.zeros((50)))))
     # test_ea((50, 20, 20, 10))
-    pickle_test()
+    genesis((15,10,6), "static/ea_SO.pickle")
+    genesis((50,28,6),"static/ea_glove.pickle")
     pass
