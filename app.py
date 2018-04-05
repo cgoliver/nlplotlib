@@ -70,8 +70,8 @@ def submitted():
 
         query = result['query']
 
-        session['test'] = random.randint(0, 100)
-        print(session['test'])
+        session['sess_id'] = str(uuid.uuid1())
+        session['new_plot'] = False
 
         new_plot = False
         plot_id = result['plotid'].replace(' ', '')
@@ -117,14 +117,19 @@ def submitted():
             parsed = get_action_from_sentence(query, columns=colnames)
             actions, values = parsed
             print("CALLING DRAW PLOT")
+            embed = None
+            embed_choice = None
+            session['new_plot'] = True 
             try:
                 xx_draw_plot(actions, values, plot_id) 
             except:
                 return "oops failed to make plot"
+
         else:
             #modifying plot
             parsed = get_action_from_sentence(query)
             actions, values = parsed
+            print(f"actions: {actions}, values: {values}")
             embed_choice = random.choice(list(embed_models.keys()))
             emb, nn = embed_models[embed_choice]
 
@@ -132,17 +137,24 @@ def submitted():
 
             prediction, nn_ind = query_predict(embed, nn)
 
+            session['nn'] = True
             session['nn_ind'] = nn_ind
             session['embedding'] = embed_choice
 
             print(prediction)
             #use prediction to make plot
-            plotname, time = make_plot(prediction, actions, values, plot_id)
+            try:
+                make_plot(prediction, actions, values, plot_id)
+            #if wrapper fails, keep old plot
+            except:
+                pass 
 
         #make zip of plot folder
         shutil.make_archive(plot_dir, 'zip', plot_dir)
 
         # log.send((query, parsed, embed, plotname))
+        job_info = (query, parsed, embed, plot_id, embed_choice)
+        state_dump('static/training.pickle', session['sess_id'], job_info)
 
         return render_template("submitted.html", plotname=plot_id,\
             result=result, plotid=plot_id)
@@ -152,13 +164,18 @@ def feedback():
     print("reached")
     # logging.info("REACHED")
     if request.method == 'POST':
-        print(session['test'])
         result = request.form['rating']
-        update_EA(float(result), session['nn_ind'],\
-            embed_models[session['embedding']])
-        log.send((result, stats))
+        if session['new_plot']:
+            state_dump("static/training.pickle", session['sess_id'], result)
+        else:
+            pickle_path = embed_models[session['embedding']][1]
+            mean, std= update_EA(float(result), session['nn_ind'],pickle_path)
+            state_dump("static/training.pickle", session['sess_id'], (result, mean, std))
     return ('', 204)
-    # return "Feedback recorded!"
-    # return render_template("home.html")
+
+def state_dump(pickle_path, sess_id, data_list):
+    state_dict = pickle.load(open(pickle_path, "rb"))
+    state_dict.setdefault(sess_id, []).append(data_list)
+    pickle.dump(state_dict, open(pickle_path, "wb"))
 if __name__ == "__main__":
     app.run(debug=True)
