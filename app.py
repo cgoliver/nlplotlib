@@ -19,6 +19,7 @@ from nn import ea
 from romanlp import get_action_from_sentence
 from embedding import *
 from logger import log_gen
+import roman_wrappers
 from roman_wrappers import *
 
 # logging.basicConfig(filename='main.log',level=logging.DEBUG)
@@ -32,11 +33,25 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 
 #load word2vec model
 
-# w2v = model_load()
+glove = model_load()
+SO = model_load("Data/model_SO_w2v_15d.word2vec")
+
+embeddings = (glove, SO)
+
+#number of wrappers
+num_wrappers = len([f for f in dir(roman_wrappers) if f.startswith('yy_')])
 
 #get nerual net generator
-nns = ea((50, 20, 20, 10), popsize=20)
-next(nns)
+nns_glove = ea((50, 20, 20, num_wrappers), popsize=20)
+nns_SO = ea((15, 30, 30, num_wrappers), popsize=20)
+nns_list = (nns_glove, nns_SO)
+
+#call count
+call_count = 0
+
+#initialize neural nets
+for nns in nns_list:
+    next(nns)
 
 log = log_gen()
 next(log)
@@ -47,22 +62,11 @@ def home():
 
 @app.route("/submitted", methods=['POST', 'GET'])
 def submitted():
+    # call_count += 1
     if request.method == 'POST':
         result = request.form
 
         query = result['query']
-        #if no filepath, use iris.csv. 
-        #also need to check extension in case plot uploaded
-        # parsed = get_action_from_sentence(query)
-        # complements = parsed[1]
-        # embed = sentence_embed(w2v, complements)
-        parsed = ['bla', 'blo']
-        actions = ["draw", "scatter", "plot"]
-        values = ("grades.csv",["Test2","Final"])
-        plot_id = "AA"
-        complements = ['comp', 'blo']
-        embed = np.zeros((50))
-
 
         new_plot = False
         plot_id = result['plotid'].replace(' ', '')
@@ -108,17 +112,25 @@ def submitted():
             parsed = get_action_from_sentence(query, columns=colnames)
             actions, values = parsed
             print("CALLING DRAW PLOT")
-            xx_draw_plot(actions, values, plot_id) 
+            try:
+                xx_draw_plot(actions, values, plot_id) 
+            except:
+                return "oops failed to make plot"
         else:
+            #modifying plot
             parsed = get_action_from_sentence(query)
             actions, values = parsed
-            yy_add_title(actions, values, plot_id)
-           # call NN to plot 
-        #send query to ea, get prediction
-        # prediction = nns.send(embed)
-
-        #use prediction to make plot
-        # plotname, time = make_plot(1, 1)
+            try:
+                embed = sentence_embed(embeddings[call_count%num_wrappers], actions)
+            except:
+                embed = np.zeros((50))
+            #send query to ea, get prediction
+            prediction = nns_list[call_count % num_wrappers].send(embed)
+            print(prediction)
+            # call NN to plot 
+            # yy_add_title(actions, values, plot_id)
+            #use prediction to make plot
+            plotname, time = make_plot(prediction, actions, values, plot_id)
 
         #make zip of plot folder
         shutil.make_archive(plot_dir, 'zip', plot_dir)
@@ -135,10 +147,11 @@ def feedback():
     if request.method == 'POST':
         result = request.form['rating']
         #send feedback to NN
-        next(nns)
-        stats = nns.send(float(result))
-        next(nns)
-        log.send((result, stats))
+        cur_nn = nns_list[call_count % num_wrappers]
+        next(cur_nn)
+        stats = cur_nn.send(float(result))
+        next(cur_nn)
+        # log.send((result, stats))
     return ('', 204)
     # return "Feedback recorded!"
     # return render_template("home.html")

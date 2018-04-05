@@ -14,11 +14,7 @@ def model_load(modelpath='Data/glove.6B.50d.txt.word2vec'):
     return KeyedVectors.load_word2vec_format(modelpath, binary=False)
     
 def embed(word, model):
-    # calculate: (king - man) + woman = ?
-    result = model.most_similar(positive=['woman', 'king'], negative=['man'],\
-        topn=1)
     return model[word]
-    # print(result)
 
 def sentence_embed(model, sentence):
     """
@@ -27,11 +23,10 @@ def sentence_embed(model, sentence):
     vec = []
     for w in sentence:
         try:
-            embedding = embed(w, model)
+            vec.append(model[w]) 
         except KeyError:
+            print(f"word {w} not in vocab")
             continue
-        else:
-            vec.append(embedding)
     #if no embeddings found
     if len(vec) == 0:
         return np.zeros((50))
@@ -39,6 +34,8 @@ def sentence_embed(model, sentence):
         return np.mean(vec, axis=0)
     
 if __name__ == "__main__":
-    words = ['carlos', 'roman', 'plot', 'axis']
+    words = ['plot', 'axis']
     model = model_load()
+    # print(model.wv.vocab)
+    # model = model_load()
     print(sentence_embed(model, words))
