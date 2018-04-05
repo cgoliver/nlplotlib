@@ -3,13 +3,14 @@ Simple Neural Network EA with training by numeric reward.
 """
 import pickle
 import numpy as np
+import random
 
 def mlp_build(shape):
     """
     Multi-layer perceptron.
     shape: (input_size, [hidden_sizes], output_size)
     """
-    nn = {'score': 0, 'model': []}
+    nn = {'score': 0, 'model': [], 'scored': False}
     for i in range(len(shape)-1):
         W = np.random.randn(shape[i], shape[i+1]) / np.sqrt(shape[i])
         b = np.zeros((1, shape[i+1]))
@@ -79,7 +80,7 @@ def replicate(nn):
     """
     Return the child of `nn` with weights shifted by Gaussian noise.
     """
-    new_nn = {'score': 0}
+    new_nn = {'score': 0, 'scored': False}
     new_model = []
     for layer in nn['model']:
         W, b = layer
@@ -87,13 +88,13 @@ def replicate(nn):
     new_nn['model'] = new_model
     return new_nn
 
-def select(pop):
+def select(pop, max_score=5):
     """
     Select from `pop` and return next population.
     """
     scores = [nn['score'] for nn in pop]
-    N = np.sum([np.exp(nn['score'] / 5) for nn in pop])
-    fitnesses = [np.exp(nn['score']/5)/N for nn in pop]
+    N = np.sum([np.exp(nn['score'] / max_score) for nn in pop])
+    fitnesses = [np.exp(nn['score']/ max_score)/N for nn in pop]
     children = np.random.choice(pop, size=len(pop), replace=True, p=fitnesses)
     return [replicate(c) for c in children]
 
@@ -106,7 +107,7 @@ def dump_state(pops):
 def load_state():
     return pickle.load(open("static/EA.pickle", "rb"))
 
-def query_predict(x, pops):
+def query_predict(x):
     """
     Pick an nn that has not been tested and produce a prediction.
     If all have been tested, create next generation and produce prediction.
@@ -115,14 +116,14 @@ def query_predict(x, pops):
     current_pop = pops[-1]
     #if we find an untested NN in current gen, get prediction
     for i, nn in enumerate(current_pop):
-        if nn['tested'] == 0:
-            return predict(nn, x)
+        if nn['scored'] == False:
+            return (mlp_predict(nn, x), i)
     #else, get new gen and get prediction
     next_gen = select(current_pop) 
     pops.append(next_gen)
-    test_nn, index = random.choice(enumerate(next_gen))
+    ind, test_nn = random.choice(list(enumerate(next_gen)))
     dump_state(pops)
-    return (predict(test_nn, x), index)
+    return (mlp_predict(test_nn, x), ind)
 
 def update_EA(score, index):
     """
@@ -131,8 +132,17 @@ def update_EA(score, index):
     pops = load_state()
     current_pop = pops[-1]
     current_pop[index]['score'] = score
+    current_pop[index]['scored'] = True 
     dump_state(pops)
     return 0
+
+def genesis(shape, popsize=20):
+    """
+    Make first generation
+    """
+    pops = [[mlp_build(shape) for _ in range(popsize)]]
+    dump_state(pops)
+    pass
 
 def ea(shape, popsize=20):
     """
@@ -174,6 +184,14 @@ def test_ea(shape):
         next(g)
         # print(sc)
         
+def pickle_test():
+    genesis((10, 14, 3))
+    for _ in range(10):
+        for _ in range(20):
+            cur_gen = load_state()[-1]
+            p, ind = query_predict(np.zeros((10)))
+            update_EA(random.randint(0, 6), ind)
+        
 if __name__ == "__main__":
     # in_dim = 2
     # out_dim = 1
@@ -185,5 +203,6 @@ if __name__ == "__main__":
     # mlp = mlp_build((50, 20, 20, 10))
     # print(mlp)
     # print(mlp_predict(mlp, np.array(np.zeros((50)))))
-    test_ea((50, 20, 20, 10))
+    # test_ea((50, 20, 20, 10))
+    pickle_test()
     pass
