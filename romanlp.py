@@ -214,5 +214,4 @@ def get_action_from_sentence(text, columns=None):
         return (complement, value)
     # return([verb,complement,value])
 if __name__ == "__main__":
-    print(get_action_from_sentence("Make a line plot of Petal_length"))
-    print(get_action_from_sentence("Draw a line plot of Petal_Length"))
+    print(get_action_from_sentence("Add title \"roman\""))
