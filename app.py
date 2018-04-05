@@ -89,21 +89,10 @@ def submitted():
             plot_dir = os.path.join(app.config['UPLOAD_FOLDER'], plot_id)
             os.makedirs(plot_dir)
             new_plot = True
-            f = request.files['file']
-            #using default dataset
-            if f.filename == '':
-                print("USING DEFAULT DATA")
-                datapath = 'static/iris.csv'
-                shutil.copyfile(datapath, os.path.join(plot_dir, "data.csv"))
-            #using uploaded dataset
-            else:
-                print("SAVING YOUR DATA")
-                filename = f.filename
-                # s_filename = secure_filename(filename)
-                try:
-                    f.save(os.path.join(plot_dir, "data.csv"))
-                except Exception as e:
-                    return "ERROR SAVING FILE"
+
+            print("USING DEFAULT DATA")
+            datapath = 'static/iris.csv'
+            shutil.copyfile(datapath, os.path.join(plot_dir, "data.csv"))
 
         print(plot_dir)
         #extract column names from datafile
