@@ -23,17 +23,17 @@
 <div id="about" style=display:none>
 <p> NLPlotlib is an experimental tool for creating and modifying data visualizations from natural language queries. 
 You can help us make it better by sending it queries. 
-Every time you submit a query, the machine learning model being the tool improves its configuration based on your feedback.<br>
+Every time you submit a query, the machine learning model being the tool improves its configuration based on your feedback.<br><br>
 
 <b> Making a new plot </b> </br>
 
-For the moment we are workign with a fixed dataset that has the following columns: 'Petal_Length'. <br>
+For the moment we are working with a fixed dataset that has the following columns: 'Petal_Length'. <br>
  
 Try: 'Make a plot of Petal_Length' <br>
 
 Our model will do some thinking and you will see a plot appear along with a a rating box, a download button and a plot id. <br>
 
-To save the plot on your computer just click "Download" <br>
+To save the plot on your computer just click "Download" <br><br>
 
 <b> Modifying an existing plot </b><br>
 
@@ -75,12 +75,20 @@ input{
     margin: 20px auto;
     border-radius: 25px;
 }
+#about-btn{
+    outline: none;
+}
+#inp{
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
 </style>
 
 <div id="query">
 	<form action="/submitted" method="POST" onsubmit="showDiv('loading')">
-	  <span id="tx"> Query </span> <input type="text" name="query" height="20" size="50" required><br>
-	  <span id="tx"> Plot ID (optional) </span> <input type="text" name="plotid" size="30" value=""><br>
+	  <span id="tx"> Query </span> <input type="text" name="query" size="50" id="inp" style="height:30px" required><br>
+	  <span id="tx"> Plot ID (optional) </span> <input type="text" name="plotid" size="30" id="inp" value=""><br>
 	  <input type="submit" id="query_submit">
 	</form>
 </div>
