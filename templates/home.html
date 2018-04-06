@@ -18,18 +18,18 @@
 
 <img src="{{url_for('static', filename='nlplotlib.svg')}}" id="svgMain"> 
 
-<button type="button" onclick="toggleShow('about')" id="about-btn"><h1>Show/Hide Help</h1></button>
 
 <div id="about" style=display:none>
 <p> NLPlotlib is an experimental tool for creating and modifying data visualizations from natural language queries. 
 You can help us make it better by sending it queries. 
-Every time you submit a query, the machine learning model being the tool improves its configuration based on your feedback.<br><br>
+Every time you submit a query, the AI and NLP model behind the tool improves its configuration based on your feedback.<br><br>
 
 <b> Making a new plot </b> </br>
 
-For the moment we are working with a fixed dataset that has the following columns: 'Petal_Length'. <br>
+For the moment we are working with a fixed dataset that has the following entrie: Sepal_Length,Sepal_Width,Petal_Length,Petal_Width <br>
  
-Try: 'Make a plot of Petal_Length' <br>
+Try: <i>'Make a line plot of Petal_Length'</i> <br>
+Or: <i>'Make a scatter plot of Petal_Length and Sepal_Width'</i> <br>
 
 Our model will do some thinking and you will see a plot appear along with a a rating box, a download button and a plot id. <br>
 
@@ -37,16 +37,21 @@ To save the plot on your computer just click "Download" <br><br>
 
 <b> Modifying an existing plot </b><br>
 
-Simply paste the plot id you received when you created a plot into the plot id bar and type in a query. 
+Simply paste the plot id you received when you created a plot into the plot id bar and type in a query. <br>
 
-For example:
+For example: <i>'Add a title "Flower" please.'</i><br>
 
-'Add a title "Flower" please.'
+Please don't forget to give the result a rating to let us know how well the tool did! <br><br>
 
-Please don't forget to give the result a rating to let us know how well the tool did!
+<b> Contact </b><br>
+
+Carlos G. Oliver (cgoliver[at]protonmail(dotcom))<br>
+Roman Sarrazin Gendron (roman[dot]sarrazingendron[at]mail[dot]mcgill[dotca])
 
 </p>
 </div>
+
+<button type="button" onclick="toggleShow('about')" id="about-btn"><h1>Show/Hide Help</h1></button>
 
 <style>
 input{
@@ -94,7 +99,7 @@ input{
 </div>
 
 <div id="loading" style="display:none;">
-<img src="{{url_for('static', filename='loading.gif')}}">
+<img src="{{url_for('static', filename='loading.gif')}}" style="width:15px;margin:25px auto;display:block;padding:50px;">
 </div>
 
 
