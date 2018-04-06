@@ -4,12 +4,17 @@
 {{ super()  }}
 <!-- Font Awesome Icon Library -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+
 <script>
 $("#submit").click(function() {
     $("#submit").attr("disabled", "true");
         });
 </script>
 <style>
+p{
+    font-family: Arial, Helvetica, sans-serif;
+}
 fieldset, label { margin: 0; padding: 0;  }
 body{ margin: 20px;  }
 h1 { font-size: 1.5em; margin: 10px;  }
@@ -18,14 +23,20 @@ h1 { font-size: 1.5em; margin: 10px;  }
 
 .rating { 
   border: solid;
-  margin-left: 410px;
-  float: left;
+  border-radius: 25px;
+  <!--border-color: grey;-->
+  display: block;
+  margin:auto;
+  width:275px;
+  text-align:center;
+  <!--background-color: #e5c9ff;-->
+  <!--float: left;-->
  }
 
 .rating > input { display: none;  } 
 .rating > label:before { 
   margin: 5px;
-  font-size: 2.25em;
+  font-size: 3em;
   font-family: FontAwesome;
   display: inline-block;
   content: "\f005";
@@ -37,7 +48,7 @@ h1 { font-size: 1.5em; margin: 10px;  }
 
 .rating > label { 
   color: #ddd; 
- float: right; 
+  float: right; 
  }
 
 /***** CSS Magic to Highlight Stars on Hover *****/
@@ -55,17 +66,35 @@ h1 { font-size: 1.5em; margin: 10px;  }
 	text-align: center;
 }
 
-.button {
+#plotid{
+    display:inline;
+    font-family: Courier New;
+    background-color: grey;
+    color: white;
+    width: 350px;
+    margin:300px auto;
+}
+#feedback-submit {
     background-color: #840ef2; 
     border: none;
     color: white;
-    padding: 15px 32px;
     text-align: center;
+    padding: 20px;
+    cursor: pointer;
     text-decoration: none;
-    display: inline-block;
+    display: block;
+    font-size: 16px;
+    margin: 20px auto;
+    border-radius: 25px;
+}
+
+#download{
+    width: 200px;
     font-size: 16px;
     margin: auto;
-
+    background-color: #ebd9fc; 
+    font-family: Arial, Helvetica, sans-serif;
+    border-radius: 25px;
 }
 
 </style>
@@ -85,15 +114,14 @@ h1 { font-size: 1.5em; margin: 10px;  }
          {% endif %}
  {% endwith %}
 
-Time: {{time}}
-
 {% endblock %}
 
 
 {% block feedback %}
 
-<div id="text-center"> How did we do? </br>
+<div id="text-center"> <h1><p>How did we do?</p></h1> </br>
 
+<div id="stars">
 <form action="/feedback" method="POST" id="starForm">
 <fieldset class="rating">
     <input type="radio" id="star5" name="rating" value="5" /><label class = "full" for="star5" title="Awesome - 5 stars"></label>
@@ -110,13 +138,26 @@ Time: {{time}}
     stars"></label><br>
 </fieldset>
     <!--<input type="submit" value="Submit" id="feedback-submit" onclick="thanks()">-->
-    <input type="submit" value="Submit" id="feedback-submit" onclick="thanks()">
+    <input type="submit" value="Submit Feedback" id="feedback-submit" onclick="thanks()">
 </form>
+</div>
 
+<script>
+var clipboard = new ClipboardJS('.copyButton');
+clipboard.on('success', function(e) {
+    console.log(e);
+
+		});
+clipboard.on('error', function(e) {
+    console.log(e);
+
+		});
+</script>
+<h1><p> Your plot ID</p></h1> <div id="plotid">{{ plotid }}</div>
+<button class="copyButton" data-clipboard-action="copy" data-clipboard-target="div#plotid" cursor="pointer">
+	<img src="{{ url_for('static', filename='clipboard.svg')}}" width="15px" alt="Copy to clipboard">
+</button>
 <br>
-
-Your plot ID: {{ plotid }}
-
 <script>
 function thanks(){
     var button = document.getElementById("feedback-submit")
@@ -127,10 +168,11 @@ function thanks(){
 }
 </script>
 
-<a href="{{ url_for('static', filename='plots/{}.zip'.format(plotname))}}" download> Download
+<div id="download">
+<a href="{{ url_for('static', filename='plots/{}.zip'.format(plotname))}}"
+    id="feedback-submit" download> Download Plot
 </a>
-
-<button class="button">Download</button>
+</div>
 
 
 {% endblock %}
