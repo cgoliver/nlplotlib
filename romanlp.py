@@ -16,9 +16,12 @@ import sys
 import random
 from quantulum import parser as qp
 import matplotlib
+matplotlib.use('Agg')
+
+from parse_config import DATA_DIR
 
 
-datadir = osp.join('/Users/carlosgonzalezoliver/Projects/NLPlotlib/roman_data')
+datadir = osp.join(DATA_DIR)
 os.environ['STANFORD_PARSER'] = osp.join(datadir, 'stanford/stanford-parser.jar')
 os.environ['STANFORD_MODELS'] = osp.join(datadir, 'stanford/stanford-parser-3.9.1-models.jar')
 os.environ['CLASSPATH'] = osp.join(datadir, "stanford_data")
