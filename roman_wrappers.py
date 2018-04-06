@@ -43,7 +43,7 @@ def xx_draw_plot(actions, values, plot_id):
     file = os.path.join("static", "plots", plot_id, "data.csv")
     fig = plt.figure()
     to_plot = []
-    colorlist =[ x[0] for x in matplotlib.colors.cnames.items()]
+    colorlist =[ x[0] for x in mpl.colors.cnames.items()]
     patches = []
     columns_in_data = []
     if "line" in actions:
@@ -118,7 +118,7 @@ def yy_set_ax_title(action,values, plot_id):
 # plt.show(plot)
 
 def yy_change_color(action,values, plot_id):
-    colorlist =[ x[0] for x in matplotlib.colors.cnames.items()]
+    colorlist =[ x[0] for x in mpl.colors.cnames.items()]
     this_color = 'black'
     for element in values:
         if element in colorlist:
