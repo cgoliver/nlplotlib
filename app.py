@@ -23,13 +23,15 @@ from embedding import *
 from logger import log_gen
 import roman_wrappers
 from roman_wrappers import *
+from conf import upload_folder
+from conf import secret_key
 
 # logging.basicConfig(filename='main.log',level=logging.DEBUG)
 
-UPLOAD_FOLDER = '/Users/carlosgonzalezoliver/Projects/NLPlotlib/static/plots'
+UPLOAD_FOLDER = upload_folder
 
 app = Flask(__name__)
-app.secret_key = 'A0Zr98j/3yX R~XHH!jmN]LWX/,?RT'
+app.secret_key = secret_key
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
