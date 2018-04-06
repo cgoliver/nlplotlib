@@ -113,8 +113,8 @@ def submitted():
             session['new_plot'] = True 
             try:
                 xx_draw_plot(actions, values, plot_id) 
-            except:
-                return "oops failed to make plot"
+            except Exception as e:
+                return f"oops failed to make plot: {e}"
 
         else:
             #modifying plot
