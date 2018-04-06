@@ -1,8 +1,9 @@
-from matplotlib import pyplot as plt
 import shutil
 import pickle
 import pandas
-import matplotlib
+import matplotlib as mpl
+mpl.use('Agg')
+import matplotlib.pyplot as plt
 import numpy as np
 import uuid
 import os
