@@ -121,7 +121,8 @@ def submitted():
             parsed = get_action_from_sentence(query)
             actions, values = parsed
             print(f"actions: {actions}, values: {values}")
-            embed_choice = random.choice(list(embed_models.keys()))
+            # embed_choice = random.choice(list(embed_models.keys()))
+            embed_choice =  'SO'
             emb, nn = embed_models[embed_choice]
 
             embed = sentence_embed(emb, actions)
