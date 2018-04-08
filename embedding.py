@@ -23,7 +23,7 @@ def sentence_embed(model, sentence):
     vec = []
     for w in sentence:
         try:
-            vec.append(model[w]) 
+            vec.append(model[w.lower()]) 
         except KeyError:
             print(f"word {w} not in vocab")
             continue

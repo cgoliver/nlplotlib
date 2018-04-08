@@ -7,6 +7,7 @@ import time
 
 def make_plot(selection, actions, values, plot_id):
     fns = [getattr(roman_wrappers, f) for f in dir(roman_wrappers) if f.startswith('yy_')]
+    print(f"calling wrapper: {fns[selection].__name__}")
     #call the function selected by NN
     figpath = fns[selection](actions, values, plot_id)
     return (figpath, time.time())

@@ -134,7 +134,9 @@ def update_EA(score, index, pickle_path):
     current_pop[index]['score'] = score
     current_pop[index]['scored'] = True 
     dump_state(pops, pickle_path)
-    return avg_score(current_pop)
+    mean, std = avg_score(current_pop)
+    gen = len(pops) - 1 
+    return mean, std, gen
 
 def genesis(shape, pickle_path, popsize=20):
     """

@@ -133,19 +133,28 @@ def submitted():
             session['nn_ind'] = nn_ind
             session['embedding'] = embed_choice
 
+            state_dump("static/training.pickle", session['sess_id'],\
+                {'wrapper': prediction})
             print(prediction)
             #use prediction to make plot
             try:
                 make_plot(prediction, actions, values, plot_id)
             #if wrapper fails, keep old plot
-            except:
+            except Exception as e:
+                print(f"wrapper error: {e}")
                 pass 
 
         #make zip of plot folder
         shutil.make_archive(plot_dir, 'zip', plot_dir)
 
         # log.send((query, parsed, embed, plotname))
-        job_info = (query, parsed, embed, plot_id, embed_choice)
+        job_info = {
+           'query': query,
+           'parsed': parsed,
+           'embed': embed,
+           'plot_id': plot_id,
+           'embed_choice': embed_choice
+        }
         state_dump('static/training.pickle', session['sess_id'], job_info)
 
         return render_template("submitted.html", plotname=plot_id,\
@@ -161,13 +170,22 @@ def feedback():
             state_dump("static/training.pickle", session['sess_id'], result)
         else:
             pickle_path = embed_models[session['embedding']][1]
-            mean, std= update_EA(float(result), session['nn_ind'],pickle_path)
-            state_dump("static/training.pickle", session['sess_id'], (result, mean, std))
+            mean, std, gen= update_EA(float(result), session['nn_ind'],pickle_path)
+            nn_info = {
+                'feedback': result,
+                'mean_fit': mean,
+                'std_fit': std,
+                'nn_ind': session['nn_ind'],
+                'gen': gen
+            }
+            state_dump("static/training.pickle", session['sess_id'], nn_info)
     return ('', 204)
 
-def state_dump(pickle_path, sess_id, data_list):
+def state_dump(pickle_path, sess_id, data_dict):
     state_dict = pickle.load(open(pickle_path, "rb"))
-    state_dict.setdefault(sess_id, []).append(data_list)
+    state_dict.setdefault(sess_id, {})
+    for k, v in data_dict.items():
+        state_dict[sess_id][k] = v
     pickle.dump(state_dict, open(pickle_path, "wb"))
 if __name__ == "__main__":
     app.run(debug=True)
