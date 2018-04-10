@@ -93,8 +93,8 @@ def select(pop, max_score=5):
     Select from `pop` and return next population.
     """
     scores = [nn['score'] for nn in pop]
-    N = np.sum([np.exp(nn['score'] / max_score) for nn in pop])
-    fitnesses = [np.exp(nn['score']/ max_score)/N for nn in pop]
+    N = np.sum([np.exp(nn['score']) for nn in pop])
+    fitnesses = [np.exp(nn['score'])/N for nn in pop]
     children = np.random.choice(pop, size=len(pop), replace=True, p=fitnesses)
     return [replicate(c) for c in children]
 
