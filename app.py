@@ -167,7 +167,8 @@ def feedback():
     if request.method == 'POST':
         result = request.form['rating']
         if session['new_plot']:
-            state_dump("static/training.pickle", session['sess_id'], result)
+            state_dump("static/training.pickle", session['sess_id'],\
+                {'feedback': result})
         else:
             pickle_path = embed_models[session['embedding']][1]
             mean, std, gen= update_EA(float(result), session['nn_ind'],pickle_path)
