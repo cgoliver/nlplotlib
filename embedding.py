@@ -34,8 +34,17 @@ def sentence_embed(model, sentence):
         return np.mean(vec, axis=0)
     
 if __name__ == "__main__":
-    words = ['plot', 'axis']
-    model = model_load()
+    words = ['plot', 'axis', 'title', 'legend', 'color']
+    model = model_load("Data/model_SO_w2v_15d.word2vec")
+    for w in words:
+        print(w)
+        sim = model.most_similar(w)
+        print(sim)
+    model_2 = model_load("Data/glove.6B.50d.txt.word2vec")
+    print("-"*80)
+    for w in words:
+        print(w)
+        print(model_2.most_similar(w))
     # print(model.wv.vocab)
     # model = model_load()
-    print(sentence_embed(model, words))
+    # print(sentence_embed(model, words))

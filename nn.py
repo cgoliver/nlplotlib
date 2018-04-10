@@ -119,6 +119,8 @@ def query_predict(x, pickle_path):
         if nn['scored'] == False:
             return (mlp_predict(nn, x), i)
     #else, get new gen and get prediction
+    with open("static/fitness.csv", "a+") as fit:
+        fit.write(f"{len(pops)},{avg_score(current_pop)[0]}\n")
     next_gen = select(current_pop) 
     pops.append(next_gen)
     ind, test_nn = random.choice(list(enumerate(next_gen)))

@@ -7,16 +7,17 @@ def load_model(modelpath):
 
 
 def pca(model):
-    X = model[model.wv.vocab][:10]
+    num_words = 15 
+    X = model[model.wv.vocab][:num_words]
     pca = PCA(n_components=2)
     result = pca.fit_transform(X)
     pyplot.scatter(result[:, 0], result[:, 1])
-    words = list(model.wv.vocab)[:10]
+    words = list(model.wv.vocab)[:num_words]
     for i, word in enumerate(words):
         pyplot.annotate(word, xy=(result[i, 0], result[i, 1]))
-    pyplot.savefig("embed_pca.pdf", format="pdf")
-    # pyplot.show()
+    pyplot.savefig("embed_SO_pca.png", format="png")
+    pyplot.show()
 
 if __name__ == "__main__":
-    model = load_model('Data/model_w2_50d.bin')
+    model = load_model('Data/model_SO_w2v_15d.bin')
     pca(model)

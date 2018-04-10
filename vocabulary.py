@@ -29,9 +29,13 @@ def sentence_extract(f):
     """
     df = pd.read_csv(f)
     sentences = list(df['Title'])
+    print(len(sentences))
 
     sentences_clean = []
+    count = 0
     for s in sentences:
+        count += 1
+        print(f"reading {count}")
         # function to test if something is a noun
         tokenized = nltk.word_tokenize(s)
         is_noun = lambda pos: pos[:2] == 'NN'
@@ -43,7 +47,8 @@ def sentence_extract(f):
 
 if __name__ == "__main__":
     sentences = sentence_extract("Data/stackoverflow.csv")
-    pickle.dump(sentences, open("sentences_clean.pickle", "wb"))
+    print(len(sentences))
+    # pickle.dump(sentences, open("sentences_clean.pickle", "wb"))
     # sentences = pickle.load(open("sentences_clean.pickle", "rb"))
     # print(sentences)
     # stemmed = stem(sentences)
