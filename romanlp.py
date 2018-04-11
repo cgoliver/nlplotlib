@@ -72,7 +72,7 @@ def get_word_dependencies(text):
             dependencies[w1].append((w2,i[1]))
         else:
             dependencies[w1] = [(w2,i[1])]
-    print(dependencies)
+    #print(dependencies)
     return dependencies
 
 
@@ -144,8 +144,8 @@ def comp_to_val(comp,values):
 
 def get_action_from_sentence(text, columns=None):
     if "\"" not in text:
+        text[0] = text[0].upper()
         words = nltk.tokenize.word_tokenize(text)
-
         full_text = text
         regex = re.compile('[^0-9a-zA-Z !?]')
         text=regex.sub('', text)
@@ -180,11 +180,12 @@ def get_action_from_sentence(text, columns=None):
         # print("Quantity : ", value)
         # print("-------------------------------------------")
     else:
-
         value=[text.split("\"")[1]]
         words = nltk.tokenize.word_tokenize(text)
         full_text = text
-        text = text.replace(value[0],"")
+        text = text.replace(value[0]," something")
+        text[0] = text[0].upper()
+
         regex = re.compile('[^a-zA-Z !?]')
         text=regex.sub('', text)
         numbers = find_number(text)
@@ -217,4 +218,4 @@ def get_action_from_sentence(text, columns=None):
         return (complement, value)
     # return([verb,complement,value])
 if __name__ == "__main__":
-    print(get_action_from_sentence("Add title \"roman\""))
+    print(get_action_from_sentence("add the title \"roman\""))
