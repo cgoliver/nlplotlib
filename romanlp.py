@@ -144,7 +144,9 @@ def comp_to_val(comp,values):
 
 def get_action_from_sentence(text, columns=None):
     if "\"" not in text:
+        text = list(text)
         text[0] = text[0].upper()
+        text = "".join(text)
         words = nltk.tokenize.word_tokenize(text)
         full_text = text
         regex = re.compile('[^0-9a-zA-Z !?]')
@@ -184,8 +186,9 @@ def get_action_from_sentence(text, columns=None):
         words = nltk.tokenize.word_tokenize(text)
         full_text = text
         text = text.replace(value[0]," something")
+        text = list(text)
         text[0] = text[0].upper()
-
+        text = "".join(text)
         regex = re.compile('[^a-zA-Z !?]')
         text=regex.sub('', text)
         numbers = find_number(text)
